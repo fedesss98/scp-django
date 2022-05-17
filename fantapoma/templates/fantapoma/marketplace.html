@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Marketplace{% endblock %}
+
+{% block content %}
+<div class="container header text-center mt-5">
+  <h1>MARKETPLACE</h1>
+  <h2>Prenota i tuoi Atleti</h2>
+</div>
+<div class="container card-container mt-5">
+  <div class="container-fluid object">
+    <div class="row">
+    {% for object in object_list %}
+      <div class="col-sm-4">
+        <div class="card shadow">
+          <div class="card-header">
+            <h5>{{object.name}}</h5>
+          </div>
+          <div class="card-body">
+            <p class="card-text">Ha gareggiato a Poma dal {{object.first_time|date:'d/m/Y'}} fino al {{object.last_time|date:'d/m/Y'}}</p>
+            <ul class="list-group list-group-numbered">
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">Primi Posti:</div>
+                <span class="badge bg-primary rounded-pill">{{object.first}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">Secondi Posti:</div>
+                <span class="badge bg-primary rounded-pill">{{object.second}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">Terzi Posti:</div>
+                <span class="badge bg-primary rounded-pill">{{object.third}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">Totale Gare:</div>
+                <span class="badge bg-primary rounded-pill">{{object.total}}</span>
+              </li>
+            </ul>
+            <h5 class="card-text text-end m-2">{{object.adjusted_points}} Franchini</h5>
+            <form method="post">
+              {% csrf_token %}
+              {% if object.name in atleti %}
+              <input type="Submit" value="Prenotato" class="btn btn-primary disabled mt-4">
+              {% else %}
+              <input type="Submit" value="Prenota" class="btn btn-primary mt-4">
+              {% endif %}
+            </form>
+          </div>
+          <div class="card-footer text-muted">
+            Prenotato da {{ object.bookings }} Giocatori.
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  </div>
+</div>
+  
+{% endblock %}
+
+{% block footer %}
+<footer class="footer mt-auto py-3 bg-light text-center">
+  <div class="container">
+    <span class="text-muted">Ti rimangono {{830}} Franchini</span>
+  </div>
+</footer>
+{% endblock %}
