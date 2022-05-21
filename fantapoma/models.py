@@ -20,14 +20,14 @@ class Athlete(models.Model):
     last_time = models.DateField('Last Race Date')
     points = models.IntegerField(default=0)
 
-    player = models.ManyToManyField(User)
+    players = models.ManyToManyField(User)
 
     def __str__(self):
         return self.name
 
     @property
     def bookings(self):
-        n = self.player.all().count()
+        n = self.players.all().count()
         return n
 
     @property

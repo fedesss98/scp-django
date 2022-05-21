@@ -11,7 +11,7 @@
   <div class="container-fluid object">
     <div class="row">
     {% for object in object_list %}
-      <div class="col-sm-4">
+      <div class="col-sm-4 my-3">
         <div class="card shadow">
           <div class="card-header">
             <h5>{{object.name}}</h5>
@@ -39,11 +39,7 @@
             <h5 class="card-text text-end m-2">{{object.adjusted_points}} Franchini</h5>
             <form method="post">
               {% csrf_token %}
-              {% if object.name in atleti %}
-              <input type="Submit" value="Prenotato" class="btn btn-primary disabled mt-4">
-              {% else %}
-              <input type="Submit" value="Prenota" class="btn btn-primary mt-4">
-              {% endif %}
+              <a href="{% url 'view-athlete' object.id %}" class="btn btn-primary">Vedi</a>
             </form>
           </div>
           <div class="card-footer text-muted">

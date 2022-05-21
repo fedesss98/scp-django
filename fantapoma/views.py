@@ -16,12 +16,29 @@ def index(request):
 
 def view_athlete(request, id):
     athlete = Athlete.objects.get(id=id)
+    user = request.user
     races = athlete.race_set.all()
+    if user.athlete_set.filter(id=athlete.id).exists():
+        buy = False
+    else:
+        buy = True
     context = {
         'title': f"{athlete.name} - Fantapoma",
         'athlete': athlete,
-        'races': races
+        'races': races,
+        'buy': buy,
     }
+
+    if request.method == 'GET':
+        """ Mostra atleta """
+        print('GET')
+    elif request.method == 'POST':
+        """ Prenota atleta """
+        athlete.players.add(user)
+        user.franchs = user.franchs - athlete.adjusted_points
+        print('POST')
+
+
     return render(request, 'fantapoma/view_athlete.html', context)
 
 class MyCrewView(ListView):
