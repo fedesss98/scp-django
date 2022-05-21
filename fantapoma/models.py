@@ -1,10 +1,14 @@
 from operator import mod
 from pyexpat import model
+from time import time
 from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
 
 import math
+import datetime
+
+DEFAULT_RACE_TIME = datetime.timedelta(minutes=0, seconds=0, milliseconds=0)
 
 # Create your models here.
 
@@ -30,7 +34,8 @@ class Athlete(models.Model):
 
     @property
     def adjusted_points(self):
-        adjusted_points = self.points*(1 + math.log(self.bookings+1))
+        booking_term = self.points*(math.tanh(self.bookings/4))
+        adjusted_points = self.points + booking_term
         return int(adjusted_points)
 
 class Player(models.Model):
@@ -38,3 +43,21 @@ class Player(models.Model):
     
     def __str__(self):
         return self.user.name
+
+class Race(models.Model):
+    athlete = models.ForeignKey(Athlete, on_delete=models.CASCADE)
+    date = models.DateField()
+    location = models.CharField(max_length=200)
+    event = models.CharField(max_length=200)
+    result = models.CharField(max_length=20)
+    time = models.DurationField(null=True, blank=True, default=DEFAULT_RACE_TIME)
+    boat = models.CharField(max_length=100)
+    cat = models.CharField(max_length=50)
+    soc = models.CharField(max_length=100)
+
+class Special(models.Model):
+    name = models.CharField(max_length=200)
+    special = models.TextField(null=True, blank=True)
+    points = models.IntegerField(default=0)
+
+    player = models.ManyToManyField(User)
