@@ -8,8 +8,6 @@ from django.contrib.auth.models import User
 import math
 import datetime
 
-DEFAULT_RACE_TIME = datetime.timedelta(minutes=0, seconds=0, milliseconds=0)
-
 # Create your models here.
 
 class Athlete(models.Model):
@@ -45,6 +43,8 @@ class Player(models.Model):
         return self.user.name
 
 class Race(models.Model):
+    DEFAULT_RACE_TIME = datetime.timedelta(minutes=0, seconds=0, milliseconds=0)
+
     athlete = models.ForeignKey(Athlete, on_delete=models.CASCADE)
     date = models.DateField()
     location = models.CharField(max_length=200)
@@ -55,9 +55,25 @@ class Race(models.Model):
     cat = models.CharField(max_length=50)
     soc = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f'{self.athlete} - {self.location}, {self.date}'
+
 class Special(models.Model):
+    COACH = 'CCH'
+    OBJECT = 'OBJ'
+    STAFF = 'STFF'
+    SPECIAL_CLASSES = (
+        (COACH, 'allenatore'), 
+        (OBJECT, 'oggetto'), 
+        (STAFF, 'staff'),
+    )
+
     name = models.CharField(max_length=200)
+    special_class = models.CharField(max_length=50, default='oggetto')
     special = models.TextField(null=True, blank=True)
     points = models.IntegerField(default=0)
 
     player = models.ManyToManyField(User)
+
+    def __str__(self):
+        return f'{self.special_class}: {self.name}'

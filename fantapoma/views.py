@@ -13,6 +13,17 @@ def index(request):
         'title': 'Fantapoma: - Il gioco di canottaggio virtuale',
         'nav-home': 'active'})
 
+
+def view_athlete(request, id):
+    athlete = Athlete.objects.get(id=id)
+    races = athlete.race_set.all()
+    context = {
+        'title': f"{athlete.name} - Fantapoma",
+        'athlete': athlete,
+        'races': races
+    }
+    return render(request, 'fantapoma/view_athlete.html', context)
+
 class MyCrewView(ListView):
     template_name = "fantapoma/mycrew.html"
 
