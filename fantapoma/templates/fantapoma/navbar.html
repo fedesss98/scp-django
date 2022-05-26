@@ -39,9 +39,8 @@
 
 {% if request.user.is_authenticated %}
 <nav class="nav justify-content-center">
-  <a class="nav-link active" aria-current="page" href="{% url 'mycrew' %}">{{ request.user }}</a>
   <span class="navbar-text">
-    Hai ancora {{ request.user.player.franchs }} Franchini e {{ request.user.athlete_set.count }} atleti in squadra.
+    {{ request.user|title }}, hai ancora {{ request.user.player.franchs }} Franchini e {{ request.user.athlete_set.count }} atleti <a href={% url 'mycrew' %}>nel tuo Otto</a>.
   </span>
 </nav>
 {% endif %}
