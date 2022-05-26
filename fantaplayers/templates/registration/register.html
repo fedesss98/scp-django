@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrati{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+  <h2>Registrati</h2>
+  <div class="container form-container my-5">
+    {% if form.errors %}
+    <p>{{form.errors}}</p>
+    {% endif %}
+    <form action='' method='POST'>
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="username" class="form-label">{{ form.username.label_tag }}</label>
+        {{ form.username }}
+        </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">{{ form.email.label_tag }}</label>
+        {{ form.email }}
+        <div id="emailHelp" class="form-text">Inserisci il tuo indirizzo email.</div>
+      </div>
+      <div class="mb-3">
+        <label for="teamName" class="form-label">{{ form.team_name.label_tag }}</label>
+        {{ form.team_name }}
+        <div id="teamNameHelp" class="form-text">Inserisci il nome della tua Squadra.</div>
+      </div>
+      <div class="mb-3">
+        <label for="password1" class="form-label">{{ form.password1.label_tag }}</label>
+        {{ form.password1 }}
+        <div id="passwordHelp" class="form-text">{{form.password1.help_text}}</div>
+      </div>
+      </div>
+      <div class="mb-3">
+        <label for="password2" class="form-label">Ripeti la Password</label>
+        {{ form.password2 }}
+        <div id="repeatPasswordHelp" class="form-text">Inserisci nuovamente la Password scelta.</div>
+      </div>
+        
+        
+      <input type="submit" value="Registrati" class="btn btn-primary">
+    </form>
+  </div>
+</div>
+{% endblock content %}

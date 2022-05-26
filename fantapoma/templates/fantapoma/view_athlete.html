@@ -1,0 +1,73 @@
+{% extends "base.html" %} 
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="container-fluid p-0">
+  <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert" >
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    {{ message }} - <a href={% url 'marketplace' %} class="alert-link">Torna al Marketplace</a>
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="container header mt-5">
+  <h2>{{ athlete.name }}</h2>
+  <h3 class="text-muted fw-light fs-4">Società Canottieri Palermo</h3>
+  <h3 class="fw-light fs-4">{{ athlete.adjusted_points }} Franchini</h3>
+  {% if request.user.is_authenticated %}
+  <form action="" method="POST">
+    {% csrf_token %} 
+    {% if buy %}
+    <input name='acquista' value="Aquista" type="Submit" class="btn btn-primary mt-4" />
+    <input name='rimuovi' value="Rimuovi" type="Submit" class="btn btn-outline-danger disabled mt-4" />
+    {% else %}
+    <input name='acquista' value="Aquistato" type="Submit" class="btn btn-outline-primary disabled mt-4"/>
+    <input name='rimuovi' value="Rimuovi" type="Submit" class="btn btn-danger mt-4" />
+    {% endif %}
+  </form>
+  {% endif %}
+</div>
+<div class="container races-table mt-5">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Data</th>
+        <th scope="col">Evento</th>
+        <th scope="col">Posizione</th>
+        <th scope="col">Tempo</th>
+        <th scope="col">Barca</th>
+        <th scope="col">Categoria</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for race in races %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ race.date }}</td>
+        <td>{{ race.event.title }}</td>
+        <td>{{ race.result }}</td>
+        <td>{{ race.time }}</td>
+        <td>{{ race.boat }}</td>
+        <td>{{ race.cat }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %} 
+{% block footer %}
+<footer class="footer mt-auto py-3 bg-light text-center">
+  <div class="container">
+    <span class="text-muted">
+        Fantapoma - Il gioco del Canottaggio Virtuale
+    </span>
+  </div>
+</footer>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile Page{% endblock title %}
+
+{% block content %}
+<div class="container profile">
+    <h1>{{ user.username }}</h1>
+    <h3 class='text-muted fw-light'>{{ user.first_name }} {{ user.last_name }}</h3>
+    <a href={% url 'fantaplayers:update-profile' user.id %} class='btn btn-info'>Modifica</a>
+    <hr>
+    <h3>Il tuo 8+</h3>
+    <p class="lead">{{ user.player.team_name }}</p>
+    <a href={% url 'mycrew' %} class='btn btn-primary'>Visualizza</a>
+</div>
+{% endblock content %}

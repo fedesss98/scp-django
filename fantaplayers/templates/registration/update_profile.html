@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile Page{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h3>Modifica i tuoi dati</h3>
+    <hr>
+    <div class="card form-container">
+        <div class="card-body">    
+            <form action="" method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="submit" value="Modifica" class="btn btn-info">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
