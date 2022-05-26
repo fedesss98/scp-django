@@ -4,14 +4,14 @@
 
 {% block content %}
 <div class="container header text-center mt-5">
-  <h2>The Hateful Eight</h2>
+  <h2>{{ request.user.player.team_name }}</h2>
   <h3 class="text-muted fw-light fs-4">Federico Amato</h3>
 </div>
-<div class="container card-container mt-5">
+<div class="container card-container mt-2">
   <div class="container-fluid object">
     <div class="row">
     {% for object in object_list %}
-      <div class="col-sm-4">
+      <div class="col-sm-4 my-3">
         <div class="card shadow">
           <div class="card-header">
             <h5>{{object.name}}</h5>
@@ -37,10 +37,7 @@
               </li>
             </ul>
             <h5 class="card-text text-end m-2">{{ object.adjusted_points }} Franchini</h5>
-            <form method="post">
-              {% csrf_token %}
-              <input type="Submit" value="Acquista" class="btn btn-secondary disabled mt-4">
-            </form>
+            <a href="{% url 'view-athlete' object.id %}" class="btn btn-primary">Vedi</a>
           </div>
           <div class="card-footer text-muted">
             Prenotato da {{ object.bookings }} Giocatori.
@@ -57,7 +54,7 @@
 {% block footer %}
 <footer class="footer mt-auto py-3 bg-light text-center">
   <div class="container">
-    <span class="text-muted">Ti rimangono {{830}} Franchini</span>
+    <span class="text-muted">Ti rimangono {{ request.user.player.franchs }} Franchini</span>
   </div>
 </footer>
 {% endblock %}

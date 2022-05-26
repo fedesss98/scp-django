@@ -38,9 +38,11 @@ class Athlete(models.Model):
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    
+    franchs = models.IntegerField(blank=True, default=200)
+    team_name = models.CharField(max_length=200, default='Prova')
+
     def __str__(self):
-        return self.user.name
+        return self.user.username
 
 class Race(models.Model):
     DEFAULT_RACE_TIME = datetime.timedelta(minutes=0, seconds=0, milliseconds=0)

@@ -8,6 +8,7 @@
   <h2>Prenota i tuoi Atleti</h2>
 </div>
 <div class="container card-container mt-5">
+  <h3>Atleti</h5>
   <div class="container-fluid object">
     <div class="row">
     {% for object in object_list %}
@@ -37,10 +38,7 @@
               </li>
             </ul>
             <h5 class="card-text text-end m-2">{{object.adjusted_points}} Franchini</h5>
-            <form method="post">
-              {% csrf_token %}
-              <a href="{% url 'view-athlete' object.id %}" class="btn btn-primary">Vedi</a>
-            </form>
+            <a href="{% url 'view-athlete' object.id %}" class="btn btn-primary">Vedi</a>
           </div>
           <div class="card-footer text-muted">
             Prenotato da {{ object.bookings }} Giocatori.
@@ -57,7 +55,7 @@
 {% block footer %}
 <footer class="footer mt-auto py-3 bg-light text-center">
   <div class="container">
-    <span class="text-muted">Ti rimangono {{830}} Franchini</span>
+    <span class="text-muted">{{ request.user }}, ti rimangono {{ request.user.player.franchs }} Franchini</span>
   </div>
 </footer>
 {% endblock %}

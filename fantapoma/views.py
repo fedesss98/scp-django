@@ -1,11 +1,12 @@
-from pyexpat import model
-from re import template
-from typing import List
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
-from fantapoma.models import Athlete, Player
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from fantapoma.models import Athlete
+from django.contrib.auth.models import User
+
+from django.contrib import messages
 
 def index(request):
     #return HttpResponse("Fantapoma")
@@ -31,17 +32,32 @@ def view_athlete(request, id):
 
     if request.method == 'GET':
         """ Mostra atleta """
-        print('GET')
+        print(f"{request.user.player} has {request.user.player.franchs}")
     elif request.method == 'POST':
         """ Prenota atleta """
-        athlete.players.add(user)
-        user.franchs = user.franchs - athlete.adjusted_points
-        print('POST')
+        if 'acquista' in request.POST:
+            print('Acquista')
+            franchs = athlete.adjusted_points
+            athlete.players.add(user)
+            print(f'{franchs} + {request.user.player.franchs}')
+            athlete.save()
+            request.user.player.franchs = request.user.player.franchs - franchs
+            context['buy'] = False
+        elif 'rimuovi' in request.POST:
+            print('Rimuovi')
+            athlete.players.remove(user)
+            franchs = athlete.adjusted_points
+            print(f'{franchs} + {request.user.player.franchs}')
+            athlete.save()
+            request.user.player.franchs = request.user.player.franchs + franchs
+            context['buy'] = True
+        request.user.player.save()
+        print(f"{request.user.player} has {request.user.player.franchs}")
 
 
     return render(request, 'fantapoma/view_athlete.html', context)
 
-class MyCrewView(ListView):
+class MyCrewView(LoginRequiredMixin, ListView):
     template_name = "fantapoma/mycrew.html"
 
     def get_queryset(self):

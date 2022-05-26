@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 
-from fantapoma.models import Athlete, Player, Race, Special
+from fantapoma.models import *
 
 # Define an inline admin descriptor for Employee model
 # which acts a bit like a singleton
@@ -20,6 +20,7 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(Athlete)
 admin.site.register(Race)
 admin.site.register(Special)
+admin.site.register(Player)
 
 # Re-register UserAdmin
 admin.site.unregister(User)

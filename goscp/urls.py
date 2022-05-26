@@ -20,4 +20,5 @@ urlpatterns = [
     path('', include('goscp_site.urls')),
     path('fantapoma/', include('fantapoma.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/', include('fantaplayers.urls', namespace='fantaplayers')),
 ]
