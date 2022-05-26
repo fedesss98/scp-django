@@ -1,3 +1,5 @@
+from math import remainder
+from urllib.parse import non_hierarchical
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView, DetailView
 
@@ -19,7 +21,9 @@ def view_athlete(request, id):
     athlete = Athlete.objects.get(id=id)
     user = request.user
     races = athlete.race_set.all()
-    if user.athlete_set.filter(id=athlete.id).exists():
+    if (user.athlete_set.filter(id=athlete.id).exists() 
+        or user.player.franchs <= 0
+        or user.athlete_set.count() >= 8):
         buy = False
     else:
         buy = True
@@ -30,29 +34,27 @@ def view_athlete(request, id):
         'buy': buy,
     }
 
-    if request.method == 'GET':
-        """ Mostra atleta """
-        print(f"{request.user.player} has {request.user.player.franchs}")
-    elif request.method == 'POST':
+    if request.method == 'POST':
         """ Prenota atleta """
         if 'acquista' in request.POST:
-            print('Acquista')
             franchs = athlete.adjusted_points
-            athlete.players.add(user)
-            print(f'{franchs} + {request.user.player.franchs}')
-            athlete.save()
-            request.user.player.franchs = request.user.player.franchs - franchs
-            context['buy'] = False
+            remain_franchs = user.player.franchs - franchs
+            if remain_franchs >= 0:
+                print('Acquista')
+                athlete.players.add(user)
+                athlete.save()
+                user.player.franchs = remain_franchs
+                context['buy'] = False
+                messages.success(request, 'Acquistato!')
+            else:
+                messages.error(request, 'Non hai abbastanza Franchini per comprare!')
         elif 'rimuovi' in request.POST:
-            print('Rimuovi')
             athlete.players.remove(user)
-            franchs = athlete.adjusted_points
-            print(f'{franchs} + {request.user.player.franchs}')
+            franchs = athlete.points
             athlete.save()
-            request.user.player.franchs = request.user.player.franchs + franchs
+            user.player.franchs = user.player.franchs + franchs
             context['buy'] = True
         request.user.player.save()
-        print(f"{request.user.player} has {request.user.player.franchs}")
 
 
     return render(request, 'fantapoma/view_athlete.html', context)
@@ -73,10 +75,28 @@ class MyCrewView(LoginRequiredMixin, ListView):
 class AthleteView(ListView):
     template_name = "fantapoma/marketplace.html"
     model = Athlete
+
+    def get_queryset(self):
+        athlete_name = self.request.GET.get('athlete_name') 
+        if athlete_name is not None:
+            self.queryset = Athlete.objects.filter(name__contains=athlete_name)
+        else:
+            self.queryset = Athlete.objects.all()
+        return super().get_queryset()
     
+    def get_ordering(self):
+        increasing = self.request.GET.get('increasing', 'off')
+        ordering = self.request.GET.get('order', 'name')
+        if increasing != 'on':
+            ordering = '-' + ordering
+        print(ordering)
+        return ordering
+
     def get_context_data(self, **kwargs):
         self.user = self.request.user
         context = super().get_context_data(**kwargs)
         atlethes = self.user.athlete_set.all().values_list('name', flat=True)
         context['atleti'] = list(atlethes)
+        context['ordering'] = self.request.GET.get('order', 'name')
+        context['increasing'] = self.request.GET.get('increasing', 'off')
         return context

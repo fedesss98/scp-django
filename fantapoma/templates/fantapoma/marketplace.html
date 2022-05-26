@@ -9,6 +9,51 @@
 </div>
 <div class="container card-container mt-5">
   <h3>Atleti</h5>
+  <form action="" method="GET" class="form-floating mb-3">
+    <div class="row g-3 my-2">
+      <div class="col-sm-7">
+        <input type="search" name="athlete_name" id="searchAthlete" class="form-control" placeholder="Ricerca Atleta">
+      </div>
+      <div class="col-auto">
+        <input type="submit" value="Ricerca" class="btn btn-primary">
+      </div>
+    </div>
+    <div class="row g-3 my-2">
+      <div class="col-sm-2">Ordina per:</div>
+      <div class="col-sm-3">
+        <select name="order" id="order" class="form-control">
+          <option value="name" {% if ordering == 'name' or ordering is None %}selected{% endif %}>
+            Nome
+          </option>
+          <option value="points" {% if ordering == 'points' %}selected{% endif %}>
+            Punteggio
+          </option>
+          <option value="first" {% if ordering == 'first' %}selected{% endif %}>
+            Primi Posti
+          </option>
+          <option value="second" {% if ordering == 'second' %}selected{% endif %}>
+            Secondi Posti
+          </option>
+          <option value="third" {% if ordering == 'third' %}selected{% endif %}>
+            Terzi Posti
+          </option>
+          <option value="total" {% if ordering == 'total' %}selected{% endif %}>
+            Totale Gare
+          </option>
+        </select>
+      </div>
+      <div class="col-sm-2 py-1">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" name="increasing" role="switch" id="orderType" {% if increasing == 'on' %}checked{% endif %}>
+          <label class="form-check-label" for="orderType">Crescente</label>
+        </div>
+      </div>
+      <div class="col-sm-1">
+        <input type="submit" value="Ordina" class="btn btn-primary">
+      </div>
+    </div>
+  </form>
+  <p></p>
   <div class="container-fluid object">
     <div class="row">
     {% for object in object_list %}
