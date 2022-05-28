@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}My crew{% endblock %}
+
+{% block content %}
+<div class="container header text-center mt-5">
+  <h2>{{ player.player.team_name }}</h2>
+  <h3 class="text-muted fw-light fs-4">{{ player.username }}</h3>
+</div>
+<div class="container card-container mt-2">
+  <div class="container-fluid object">
+    <div class="row">
+    {% for athlete in athletes %}
+      <div class="col-sm-4 my-3">
+        <div class="card shadow">
+          <div class="card-header">
+            <h5>{{object.name}}</h5>
+          </div>
+          <div class="card-body">
+            <p class="card-text">Ha gareggiato a Poma dal {{object.first_time|date:'d/m/Y'}} fino al {{object.last_time|date:'d/m/Y'}}</p>
+            <ul class="list-group list-group-numbered">
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">Primi Posti:</div>
+                <span class="badge bg-primary rounded-pill">{{object.first}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">Secondi Posti:</div>
+                <span class="badge bg-primary rounded-pill">{{object.second}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">Terzi Posti:</div>
+                <span class="badge bg-primary rounded-pill">{{object.third}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">Totale Gare:</div>
+                <span class="badge bg-primary rounded-pill">{{object.total}}</span>
+              </li>
+            </ul>
+            <h5 class="card-text text-end m-2">{{ object.adjusted_points }} Franchini</h5>
+            <a href="{% url 'view-athlete' object.id %}" class="btn btn-primary">Vedi</a>
+          </div>
+          <div class="card-footer text-muted">
+            Prenotato da {{ object.bookings }} Giocatori.
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  </div>
+</div>
+  
+{% endblock %}
+
+{% block footer %}
+<footer class="footer mt-auto py-3 bg-light text-center">
+  <div class="container">
+    <span class="text-muted">Ti rimangono {{ request.user.player.franchs }} Franchini</span>
+  </div>
+</footer>
+{% endblock %}

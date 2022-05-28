@@ -1,4 +1,5 @@
 from math import remainder
+from urllib import request
 from urllib.parse import non_hierarchical
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView, DetailView
@@ -60,7 +61,10 @@ def view_athlete(request, id):
     return render(request, 'fantapoma/view_athlete.html', context)
 
 class MyCrewView(LoginRequiredMixin, ListView):
+    model = Athlete
     template_name = "fantapoma/mycrew.html"
+
+    context_object_name = 'player'
 
     def get_queryset(self):
         self.user = self.request.user
@@ -93,10 +97,39 @@ class AthleteView(ListView):
         return ordering
 
     def get_context_data(self, **kwargs):
-        self.user = self.request.user
         context = super().get_context_data(**kwargs)
+        self.user = self.request.user
         atlethes = self.user.athlete_set.all().values_list('name', flat=True)
         context['atleti'] = list(atlethes)
         context['ordering'] = self.request.GET.get('order', 'name')
         context['increasing'] = self.request.GET.get('increasing', 'off')
+        return context
+
+class LeaderboardView(ListView):
+    model = User
+    template_name = 'fantapoma/leaderboard.html'
+
+    context_object_name = 'players'
+
+
+class ViewCrew(DetailView):
+    model = User
+    template_name = 'fantapoma/view_crew.html'
+
+    context_object_name = 'player'
+
+    def get_object(self):
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        if pk is None:
+            pk = self.request.user.id
+            self.kwargs[self.pk_url_kwarg] = pk
+        return super(ViewCrew, self).get_object()         
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        if pk is None:
+            pk = self.request.user.id
+
+        context['athletes'] = Athlete.objects.filter(players__pk=pk)
         return context
