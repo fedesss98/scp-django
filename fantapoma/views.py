@@ -1,12 +1,9 @@
-from math import remainder
-from urllib import request
-from urllib.parse import non_hierarchical
 from django.shortcuts import get_object_or_404, render, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from fantapoma.models import Athlete
+from fantapoma.models import Athlete, Special
 from django.contrib.auth.models import User
 
 from django.contrib import messages
@@ -133,3 +130,11 @@ class ViewCrew(DetailView):
 
         context['athletes'] = Athlete.objects.filter(players__pk=pk)
         return context
+
+    
+class CreateSpecialView(CreateView):
+    model = Special
+    fields = '__all__'
+
+class ListSpecialsView(ListView):
+    model = Special

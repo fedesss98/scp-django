@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Specials{% endblock title %}
+
+{% block content %} 
+<div class="container">
+    <h2>Specials</h2>
+    {% for special in object_list %}
+    <div class="container special-container">
+        {{ special }}
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}
