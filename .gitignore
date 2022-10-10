@@ -141,6 +141,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.venv-scp
 
 # Spyder project settings
 .spyderproject
