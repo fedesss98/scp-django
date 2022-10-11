@@ -14,16 +14,17 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'leaderboard' %}">Classifica</a>
         </li>
+        {% if request.user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'marketplace' %}">Marketplace</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'mycrew' %}">My Crew</a>
         </li>
-        {% if request.user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'fantaplayers:profile' request.user.id %}">Profilo</a>
         </li>
+
         <li class="nav-item">
           <a class="nav-link" href="{% url 'fantaplayers:logout' %}">Logout</a>
         </li>
@@ -39,7 +40,6 @@
     </div>
   </div>
 </nav>
-
 {% if request.user.is_authenticated %}
 <nav class="nav justify-content-center">
   <span class="navbar-text">
