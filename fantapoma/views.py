@@ -48,7 +48,7 @@ def view_athlete(request, id):
                 messages.error(request, 'Non hai abbastanza Franchini per comprare!')
         elif 'rimuovi' in request.POST:
             athlete.players.remove(user)
-            franchs = athlete.points
+            franchs = athlete.adjusted_points
             athlete.save()
             user.player.franchs = user.player.franchs + franchs
             context['buy'] = True
