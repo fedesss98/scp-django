@@ -1,1 +1,1 @@
-web: gunicorn goscp.wsgi --log-file -
+web: python manage.py migrate && gunicorn goscp.wsgi
