@@ -18,7 +18,7 @@ class Athlete(models.Model):
     last_time = models.DateField('Last Race Date')
     points = models.IntegerField(default=0)
 
-    players = models.ManyToManyField(User)
+    players = models.ManyToManyField(User, blank=True)
 
     def __str__(self):
         return self.name
