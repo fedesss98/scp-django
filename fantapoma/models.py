@@ -97,7 +97,7 @@ class Special(models.Model):
     )
 
     name = models.CharField(max_length=200)
-    special_class = models.CharField(max_length=50, default='oggetto')
+    special_class = models.CharField(max_length=50, choices=SPECIAL_CLASSES, default='oggetto')
     special = models.TextField(null=True, blank=True)
     points = models.IntegerField(default=0)
 
