@@ -63,7 +63,7 @@ class Athlete(models.Model):
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    franchs = models.IntegerField(blank=True, default=250)
+    franchs = models.IntegerField(blank=True, default=450)
     team_name = models.CharField(max_length=200, default='8+')
     score = models.IntegerField(blank=True, null=True, default=0)
 
