@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from django.views.generic.edit import FormView
 from django import forms 
 
@@ -203,3 +203,6 @@ class UpdatePointsView(LoginRequiredMixin, FormView):
         # form.instance = self.request.user.athlete
         form.save()
         return super().form_valid(form)
+    
+class EventsView(TemplateView):
+    template_name = 'fantapoma/events.html'
