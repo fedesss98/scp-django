@@ -16,7 +16,13 @@
 {% endif %}
 
   <main class="container">
-    <h2>Aggiorna i tuoi Punti</h2>
+    <h2>
+    {% if athlete %}
+      Aggiorna i Punti di {{ athlete }}
+    {% else %}
+      Aggiorna i tuoi Punti
+    {% endif %}
+    </h2>
     <p>Usa questo form per registrare i tuoi Risultati e le tue Azioni Speciali e aggiornare i tuoi punti.</p>
     <div class="container mb-5">
       <form method="post">

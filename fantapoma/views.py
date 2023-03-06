@@ -170,13 +170,21 @@ class UpdatePointsView(FormView):
     form_class = UpdatePointsForm
     success_url = reverse_lazy('leaderboard')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        athlete_id = self.kwargs.get('athlete_id')
+        if athlete_id:
+            athlete = Athlete.objects.get(id=athlete_id)
+            context['athlete'] = athlete.name
+        return context
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         athlete_id = self.kwargs.get('athlete_id')
         if athlete_id:
             athlete = Athlete.objects.get(id=athlete_id)
         else:
-            athlete = self.request.user.athlete
+            athlete = self.request.user.true_athlete
         kwargs['instance'] = athlete
         return kwargs
 
