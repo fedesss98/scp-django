@@ -27,35 +27,6 @@ class UpdatePointsForm(forms.ModelForm):
         ('sbagliato', "Il giudice in partenza sbaglia il tuo nome"),
         ('ultimo', "Ultimo a gareggiare"),
     )
-    ACTION_POINTS_DICT = {
-        'golds': 50,
-        'silvers': 30,
-        'bronzes': 20,
-        'lasts': -10,
-        'cannone': 5,
-        'cibo': 5,
-        'salto': 5,
-        'selfie': 5,
-        'bevanda': 5,
-        'franchina': 5,
-        'batticinque': 3,
-        'vittoria': 3,
-        'stretta': 3,
-        'calzini': 3,
-        'maglietta': 1,
-        'occhiali': 1,
-        'cappellino': 1,
-        'miele': 1,
-        'cazziata': -10,
-        'fermarsi': -5,
-        'ritardo': -5,
-        'cadere': -5,
-        'litigare': -5,
-        'rifiutare': -2,
-        'boe': -2,
-        'sbagliato': -1,
-        'ultimo': -1,
-        }
     golds = forms.IntegerField(label="Medaglie d'Oro", initial=0, required=False)
     silvers = forms.IntegerField(label="Medaglie di Argento", initial=0, required=False)
     bronzes = forms.IntegerField(label="Medaglie di Bronzo", initial=0, required=False)
@@ -90,6 +61,15 @@ class UpdatePointsForm(forms.ModelForm):
             'occhiali': 1,
             'cappellino': 1,
             'miele': 1,
+            'cazziata': -10,
+            'fermarsi': -5,
+            'ritardo': -5,
+            'cadere': -5,
+            'litigare': -5,
+            'rifiutare': -2,
+            'boe': -2,
+            'sbagliato': -1,
+            'ultimo': -1,
         }
         points = 0
         for position in ['golds', 'silvers', 'bronzes', 'lasts']:
