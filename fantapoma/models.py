@@ -68,6 +68,8 @@ class Athlete(models.Model):
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    first_name = models.TextField('nome', max_length=100, blank=True, null=True)
+    last_name = models.TextField('cognome', max_length=100, blank=True, null=True)
     franchs = models.IntegerField(blank=True, default=450)
     team_name = models.CharField(max_length=200, default='8+')
 
@@ -79,8 +81,9 @@ class Player(models.Model):
         athletes = self.get_athletes()
         score = athletes.aggregate(Sum('points'))['points__sum']
         # Add a second time the score of the Player True Athlete
-        if self.user.true_athlete:
+        if hasattr(self.user, 'true_athlete'):
             score += self.user.true_athlete.points
+        score = score if score is not None else 0
         return score
 
     def __str__(self):

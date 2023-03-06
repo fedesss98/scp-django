@@ -125,8 +125,13 @@ class LeaderboardView(ListView):
     model = User
     template_name = 'fantapoma/leaderboard.html'
 
-    context_object_name = 'users'
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        for q in queryset:
+            print(q.player.score)
+        return sorted(queryset, key=lambda u: u.player.score, reverse=True)
 
+    context_object_name = 'users'
 
 class ViewCrew(DetailView):
     model = User
