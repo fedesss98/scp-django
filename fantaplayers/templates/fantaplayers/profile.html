@@ -5,7 +5,11 @@
 {% block content %}
 <div class="container profile">
     <h1>{{ user.username }}</h1>
-    <h3 class='text-muted fw-light'>{{ user.first_name }} {{ user.last_name }}</h3>
+    <h3 class='text-muted fw-light'>
+        <a href={% url 'view-athlete' user.true_athlete.id %} class="text-reset">
+            {{ user.true_athlete }}
+        </a>
+    </h3>
     <a href={% url 'fantaplayers:update-profile' user.id %} class='btn btn-info'>Modifica</a>
     <hr>
     <h3>Il tuo 8+</h3>
@@ -13,3 +17,24 @@
     <a href={% url 'mycrew' %} class='btn btn-primary'>Visualizza</a>
 </div>
 {% endblock content %}
+
+{% block footer %}
+<footer class="footer mt-auto py-5 bg-light">
+  <div class="container-fluid text-left">
+    <div class="row justify-content-between">
+      <div class="col-5">
+        <span class="text-muted">
+          Fantapoma - Il gioco del Canottaggio Virtuale
+        </span>
+      </div>
+      <div class="col-5 text-right">
+        <span class="text-muted">
+          Made by Federico Amato -
+          <a href="mailto:fedesss98@hotmail.it" class="text-reset">fedesss98@hotmail.it</a> / 
+          <a href="https://www.instagram.com/fedeamat/" class="text-reset">@fedeamat</a> /
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>
+{% endblock %}
