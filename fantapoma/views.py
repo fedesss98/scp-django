@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic.edit import FormView
 from django import forms 
@@ -7,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from fantapoma.models import Athlete, Special
 from django.contrib.auth.models import User
+from .forms import UpdatePointsForm
 
 from django.contrib import messages
 
@@ -123,7 +125,7 @@ class LeaderboardView(ListView):
     model = User
     template_name = 'fantapoma/leaderboard.html'
 
-    context_object_name = 'players'
+    context_object_name = 'users'
 
 
 class ViewCrew(DetailView):
@@ -156,21 +158,13 @@ class CreateSpecialView(CreateView):
 class ListSpecialsView(ListView):
     model = Special
 
-class MedalForm(forms.Form):
-    gold = forms.IntegerField()
-    silver = forms.IntegerField()
-    bronze = forms.IntegerField()
 
-class MedalFormView(FormView):
-    template_name = 'fantapoma/submit_scores.html'
-    form_class = MedalForm
+class UpdatePointsView(FormView):
+    template_name = 'fantapoma/submit_points.html'
+    form_class = UpdatePointsForm
+    success_url = reverse_lazy('leaderboard')
 
     def form_valid(self, form):
-        gold = form.cleaned_data['gold']
-        silver = form.cleaned_data['silver']
-        bronze = form.cleaned_data['bronze']
-        points = gold * 3 + silver * 2 + bronze
-        athlete = Athlete.objects.get(pk=self.kwargs['pk'])
-        athlete.points += points
-        athlete.save()
+        form.instance = self.request.user.true_athlete
+        form.save()
         return super().form_valid(form)

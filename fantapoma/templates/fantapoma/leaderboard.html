@@ -16,12 +16,12 @@
             </tr>
         </thead>
         <tbody>
-          {% for player in players %}
+          {% for user in users %}
           <tr style="transform: rotate(0);">
             <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ player }}</td>
-            <td ><a href={% url 'view-crew' player.id %} class="stretched-link">{{ player.player.team_name }}</a></td>
-            <td>{{ player.player.score }}</td>
+            <td>{{ user }}</td>
+            <td ><a href={% url 'view-crew' user.id %} class="stretched-link">{{ user.player.team_name }}</a></td>
+            <td>{{ user.player.score }}</td>
           </tr>
           {% endfor %}
         </tbody>

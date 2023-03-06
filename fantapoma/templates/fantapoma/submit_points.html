@@ -15,12 +15,15 @@
 {% endfor %}
 {% endif %}
 
-{% block content %}
-  <h2>Update Athlete Points</h2>
-  <p>Use this form to update the points of your athlete based on the number of gold, silver and bronze medals won.</p>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+  <main class="container">
+    <h2>Update Athlete Points</h2>
+    <p>Use this form to update the points of your athlete based on the number of gold, silver and bronze medals won.</p>
+    <div class="container">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Invia</button>
+      </form>
+    </div>
+  </main>
 {% endblock %}

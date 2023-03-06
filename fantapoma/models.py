@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.db.models import Sum
+
 import math
 import datetime
 
@@ -20,8 +22,7 @@ class Athlete(models.Model):
     points = models.IntegerField(default=0)
 
     players = models.ManyToManyField(User, blank=True)
-
-    is_user = models.OneToOneField(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='user')
+    is_user = models.OneToOneField(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='true_athlete')
 
     def __str__(self):
         return self.name
@@ -69,7 +70,15 @@ class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     franchs = models.IntegerField(blank=True, default=450)
     team_name = models.CharField(max_length=200, default='8+')
-    score = models.IntegerField(blank=True, null=True, default=0)
+
+    def get_athletes(self):
+        return self.user.athlete_set.all()
+
+    @property
+    def score(self):
+        athletes = self.get_athletes()
+        score = athletes.aggregate(Sum('points'))['points__sum']
+        return score
 
     def __str__(self):
         return self.user.username
