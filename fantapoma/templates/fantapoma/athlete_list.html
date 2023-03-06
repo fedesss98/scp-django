@@ -11,12 +11,16 @@
               <th scope="col">ID</th>
               <th scope="col">Nome</th>
               <th scope="col">Punti</th>
+              <th scope="col">Modifica</th>
             </tr>
           </thead>
           <tbody>
             {% for athlete in athlete_list %}
             <tr>
                 <td>{{ athlete.id }}</td><td>{{ athlete.name }}</td><td>{{ athlete.points }}</td>
+                <td>
+                    <a href="{% url 'submit-points' athlete.id %}" class="btn btn-primary">Aggiorna Punti</a>
+                </td>
             </tr>
             {% endfor %}
           </tbody>

@@ -174,15 +174,13 @@ class UpdatePointsView(FormView):
         kwargs = super().get_form_kwargs()
         athlete_id = self.kwargs.get('athlete_id')
         if athlete_id:
-            kwargs['initial']['athlete_id'] = athlete_id
+            athlete = Athlete.objects.get(id=athlete_id)
+        else:
+            athlete = self.request.user.athlete
+        kwargs['instance'] = athlete
         return kwargs
 
     def form_valid(self, form):
-        athlete_id = form.cleaned_data.get('athlete_id')
-        if athlete_id:
-            athlete = get_object_or_404(Athlete, id=athlete_id)
-            form.instance = athlete
-        else:
-            form.instance = self.request.user.athlete
+        # form.instance = self.request.user.athlete
         form.save()
         return super().form_valid(form)
