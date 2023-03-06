@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Athlete list{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Lista degli Atleti nel Database</h1>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Punti</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for athlete in athlete_list %}
+            <tr>
+                <td>{{ athlete.id }}</td><td>{{ athlete.name }}</td><td>{{ athlete.points }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -155,8 +155,14 @@ class CreateSpecialView(CreateView):
     model = Special
     fields = '__all__'
 
+
 class ListSpecialsView(ListView):
     model = Special
+
+
+class RawAthleteListView(ListView):
+    model = Athlete
+    template_name = 'fantapma/athlete_list.html'
 
 
 class UpdatePointsView(FormView):
@@ -164,7 +170,19 @@ class UpdatePointsView(FormView):
     form_class = UpdatePointsForm
     success_url = reverse_lazy('leaderboard')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        athlete_id = self.kwargs.get('athlete_id')
+        if athlete_id:
+            kwargs['initial']['athlete_id'] = athlete_id
+        return kwargs
+
     def form_valid(self, form):
-        form.instance = self.request.user.true_athlete
+        athlete_id = form.cleaned_data.get('athlete_id')
+        if athlete_id:
+            athlete = get_object_or_404(Athlete, id=athlete_id)
+            form.instance = athlete
+        else:
+            form.instance = self.request.user.athlete
         form.save()
         return super().form_valid(form)
