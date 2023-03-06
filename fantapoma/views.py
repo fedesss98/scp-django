@@ -165,12 +165,18 @@ class RawAthleteListView(ListView):
     template_name = 'fantapma/athlete_list.html'
 
 
-class UpdatePointsView(FormView):
+class UpdatePointsView(LoginRequiredMixin, FormView):
     template_name = 'fantapoma/submit_points.html'
     form_class = UpdatePointsForm
     success_url = reverse_lazy('leaderboard')
 
+    def handle_no_permission(self):
+        # Update an error message befor redirecting
+        messages.error(self.request, 'Devi fare il login prima di aggiungere il tuo punteggio')
+        return super().handle_no_permission()
+
     def get_context_data(self, **kwargs):
+        # Update the context data to serve the name of the athlete selected by URL ID
         context = super().get_context_data(**kwargs)
         athlete_id = self.kwargs.get('athlete_id')
         if athlete_id:
@@ -179,6 +185,7 @@ class UpdatePointsView(FormView):
         return context
 
     def get_form_kwargs(self):
+        # Takes the user athlete or one athlete with ID specified in the URL 
         kwargs = super().get_form_kwargs()
         athlete_id = self.kwargs.get('athlete_id')
         if athlete_id:
@@ -189,6 +196,7 @@ class UpdatePointsView(FormView):
         return kwargs
 
     def form_valid(self, form):
+        # Save the updated model
         # form.instance = self.request.user.athlete
         form.save()
         return super().form_valid(form)
