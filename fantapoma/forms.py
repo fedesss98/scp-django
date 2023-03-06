@@ -17,6 +17,15 @@ class UpdatePointsForm(forms.ModelForm):
         ('occhiali', 'Indossare occhiali da sole'),
         ('cappellino', 'Indossare un cappellino'),
         ('miele', 'Selfie con Miele'),
+        ('cazziata', 'Cazziatone da Beni'),
+        ('fermars', "Fermarsi prima dell'arrivo"),
+        ('ritardo', "Arrivare in ritardo"),
+        ('cadere', "Cadere in acqua"),
+        ('litigare', "Litigare con un avversario"),
+        ('rifiutare', "Rifiutarsi di buttare i rifiuti"),
+        ('boe', "Tagliare il traguardo fuori dalle boe"),
+        ('sbagliato', "Il giudice in partenza sbaglia il tuo nome"),
+        ('ultimo', "Ultimo a gareggiare"),
     )
     ACTION_POINTS_DICT = {
         'golds': 50,
@@ -37,6 +46,15 @@ class UpdatePointsForm(forms.ModelForm):
         'occhiali': 1,
         'cappellino': 1,
         'miele': 1,
+        'cazziata': -10,
+        'fermarsi': -5,
+        'ritardo': -5,
+        'cadere': -5,
+        'litigare': -5,
+        'rifiutare': -2,
+        'boe': -2,
+        'sbagliato': -1,
+        'ultimo': -1,
         }
     golds = forms.IntegerField(label="Medaglie d'Oro", initial=0, required=False)
     silvers = forms.IntegerField(label="Medaglie di Argento", initial=0, required=False)
