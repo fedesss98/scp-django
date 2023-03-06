@@ -16,14 +16,44 @@
 {% endif %}
 
   <main class="container">
-    <h2>Update Athlete Points</h2>
-    <p>Use this form to update the points of your athlete based on the number of gold, silver and bronze medals won.</p>
-    <div class="container">
+    <h2>Aggiorna i tuoi Punti</h2>
+    <p>Usa questo form per registrare i tuoi Risultati e le tue Azioni Speciali e aggiornare i tuoi punti.</p>
+    <div class="container mb-5">
       <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% for field in form %}
+          <div class="mb-3">
+            {{ field.errors }}<br>
+            {{ field.label_tag }}<br>
+            {{ field }}
+            {% if field.help_text %}
+            <div class="form-text help">{{ field.help_text|safe }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
         <button type="submit" class="btn btn-primary">Invia</button>
       </form>
     </div>
   </main>
+
 {% endblock %}
+{% block footer %}
+<footer class="footer mt-5 py-5 bg-light text-center">
+  <div class="container-fluid text-left">
+    <div class="row justify-content-between">
+      <div class="col-4">
+        <span class="text-muted">
+          Fantapoma - Il gioco del Canottaggio Virtuale
+        </span>
+      </div>
+      <div class="col-8 text-right">
+        <span class="text-muted">
+          Made by Federico Amato -
+          <a href="mailto:fedesss98@hotmail.it" class="text-reset">fedesss98@hotmail.it</a> / 
+          <a href="https://www.instagram.com/fedeamat/" class="text-reset">@fedeamat</a> /
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>
+{% endblock footer %}
