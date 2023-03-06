@@ -95,21 +95,21 @@ class MyCrewView(LoginRequiredMixin, ListView):
 class AthleteView(ListView):
     template_name = "fantapoma/marketplace.html"
     model = Athlete
+    ordering = '-name'
 
     def get_queryset(self):
         athlete_name = self.request.GET.get('athlete_name') 
+        queryset = super().get_queryset().order_by('name')
         if athlete_name is not None:
-            self.queryset = Athlete.objects.filter(name__icontains=athlete_name)
-        else:
-            self.queryset = Athlete.objects.all()
-        return super().get_queryset()
+            queryset = Athlete.objects.filter(name__icontains=athlete_name)
+        print(queryset)
+        return queryset
     
     def get_ordering(self):
         increasing = self.request.GET.get('increasing', 'off')
         ordering = self.request.GET.get('order', 'name')
         if increasing != 'on':
             ordering = '-' + ordering
-        print(ordering)
         return ordering
 
     def get_context_data(self, **kwargs):
@@ -127,8 +127,6 @@ class LeaderboardView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        for q in queryset:
-            print(q.player.score)
         return sorted(queryset, key=lambda u: u.player.score, reverse=True)
 
     context_object_name = 'users'
