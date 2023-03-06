@@ -21,17 +21,26 @@ def view_athlete(request, id):
     athlete = Athlete.objects.get(id=id)
     user = request.user
     races = athlete.race_set.all()
-    if (user.athlete_set.filter(id=athlete.id).exists() 
-        or user.player.franchs <= 0
-        or user.athlete_set.count() >= 8):
+    buy = True
+    sell = False
+    # If the user has the athlete in it's eight
+    if user.athlete_set.filter(id=athlete.id).exists():
+        # Cannot buy, can sell
         buy = False
-    else:
-        buy = True
+        sell = True
+    # If the user doesn't have the player
+    # and doesn't have franchs or doesn't have more space
+    elif (user.player.franchs <= 0 
+          or user.athlete_set.count() >= 8):
+        # Cannot buy, cannot sell
+        buy = False
+        sell = False
     context = {
         'title': f"{athlete.name} - Fantapoma",
         'athlete': athlete,
         'races': races,
         'buy': buy,
+        'sell': sell,
     }
 
     if request.method == 'POST':
@@ -44,7 +53,9 @@ def view_athlete(request, id):
                 athlete.players.add(user)
                 athlete.save()
                 user.player.franchs = remain_franchs
+                # Now user cannot buy but can sell
                 context['buy'] = False
+                context['sell'] = True
                 messages.success(request, 'Acquistato!')
             else:
                 messages.error(request, 'Non hai abbastanza Franchini per comprare!')
@@ -53,7 +64,9 @@ def view_athlete(request, id):
             franchs = athlete.adjusted_price
             athlete.save()
             user.player.franchs = user.player.franchs + franchs
+            # Now user can buy but cannot sell
             context['buy'] = True
+            context['sell'] = False
         request.user.player.save()
 
 
@@ -75,6 +88,8 @@ class MyCrewView(LoginRequiredMixin, ListView):
         context['atleti'] = self.user.athlete_set.all()
         return context
 
+
+# MARKETPLACE
 class AthleteView(ListView):
     template_name = "fantapoma/marketplace.html"
     model = Athlete
@@ -82,7 +97,7 @@ class AthleteView(ListView):
     def get_queryset(self):
         athlete_name = self.request.GET.get('athlete_name') 
         if athlete_name is not None:
-            self.queryset = Athlete.objects.filter(name__contains=athlete_name)
+            self.queryset = Athlete.objects.filter(name__icontains=athlete_name)
         else:
             self.queryset = Athlete.objects.all()
         return super().get_queryset()

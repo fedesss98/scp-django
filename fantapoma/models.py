@@ -21,7 +21,7 @@ class Athlete(models.Model):
 
     players = models.ManyToManyField(User, blank=True)
 
-    is_user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL, related_name='user')
+    is_user = models.OneToOneField(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='user')
 
     def __str__(self):
         return self.name
