@@ -18,65 +18,176 @@
   </head>
   <body>
     {% include 'fantapoma/navbar.html' %}
-    <main class="container-fluid text-center mt-5">
-      <h1 class="display-1">Fantapoma</h1>
-      <h2>Crea il tuo otto e distruggili tutti</h2>
+    <main class="container-fluid mt-5">
+      <h1 class="display-1 text-center">Fantapoma</h1>
+      <h2 class="text-center">Crea il tuo otto e distruggili tutti</h2>
       <br>
-      <div class="container-sm rules mt-5 mx-auto">
-        <h4>Regolamento</h4>
-        <p class="lead">Fantapoma è il primo gioco di Canottaggio Virtuale</p>
+      <div class="container-sm rules mw-5 mt-5 mx-auto">
+        <h4 class="text-center">Regolamento</h4>
+        <p class="lead text-center">Fantapoma è il primo gioco di Canottaggio Virtuale</p>
         <p class="text-start mw-5 mx-auto">
-          Il regolamento è semplice: hai <strong>250 Franchini</strong> a disposizione per acquistare i tuoi nove <strong>Atleti Virtuali</strong>.
-          Devi formare un 8+ compreso di Timoniere.<br>
+          Il regolamento è semplice: hai <strong>450 Franchini</strong> a disposizione per acquistare i tuoi nove <strong>Atleti Virtuali</strong>.
+          Devi formare un 8+, di cui <em>tu</em> sarai il Timoniere.<br>
           Durante la prossima regata a Poma, i tuoi Atleti guadagneranno punti nel Fantapoma in base alle loro azioni nella realtà.
           I punti verranno guadagnati <strong>vincendo le gare</strong> naturalmente, ma anche tramite <strong>Azioni Speciali</strong> più stravaganti.<br>
           Ricorda quindi di scegliere non solo gli Atleti più forti, ma anche quelli più coraggiosi e determinati. 
-          E ricorda soprattutto che il Timoniere guadagna il doppio dei punti per le Azioni Speciali, ma non guadagna punti per le gare!<br>
+          Il Timoniere guadagna il doppio dei punti per le Azioni Speciali, ma non guadagna punti per le gare!<br>
           Dopo aver creato il tuo account, vai sul <strong>Marketplace</strong> per selezionare gli Atleti da acquistare.<br>
-          Se pensi di aver acquistato un atleta per sbaglio, potrai comunque rivenderlo.<br>
-          Ma attenzione! 
+          <em>Ma attenzione!</em><br>
           Il prezzo di ogni Atleta Virtuale è determinato da quante gare ha vinto in passato ma anche dal numero di Giocatori che lo hanno già acquistato!
-          Perciò affrettati a scegliere i tuoi campioni prima che lo facciano gli altri!
+          Perciò affrettati a scegliere i tuoi campioni prima che lo facciano gli altri!<br>
+          Se pensi di aver acquistato un atleta per sbaglio, potrai comunque rivenderlo all'ultimo prezzo raggiunto dall'Atleta.
+          A causa dei prezzi variabili, ciò ti consentirà di guadagnare o perdere Franchini.<br>
         </p>
       </div>
-      <div class="container-sm points mw-5 mt-5 mx-auto text-left">
+      <div class="container-sm points mw-5 my-5 mx-auto">
         <h5>Punti e Azioni Speciali</h5>
-        <p class="text-sm-left">Ogni Atleta guadagna punti per ogni gara in cui si qualifica:</p>
-        <ul class="text-left">
-          <li>Primo <b>+50P</b></li>
-          <li>Secondo <b>+30P</b></li>
-          <li>Terzo <b>+20P</b></li>
-          <li>Ultimo <b>-20P</b></li>
-        </ul>
-        <p class="text-left">Inoltre ogni Atleta guadagna o perde punti non appena compie per la prima volta una Azione Speciale (ovvero non si guadagnano o perdono più punti ripetendo una stessa Azione Speciale)</p>
-        <ul>
-          <li>Video "A CANNONE" con Ficarra <b>+10P</b></li>
-          <li>Offrire cibo <b>+5P</b></li>
-          <li>Foto con salto in premiazione <b>+5P</b></li>
-          <li>Selfie con un Allenatore di Secondo Livello o superiore <b>+5P</b></li>
-          <li>Bevanda offerta a un Allenatore di Primo Livello o superiore <b>+5P</b></li>
-          <li>Selfie con Bruno Franchina <b>+5P</b></li>
-          <li>Batticinque a Ficarra <b>+3P</b></li>
-          <li>Foto stringendo la mano a un avversario di un altro club <b>+3P</b></li>
-          <li>Video "VITTORIA PER LA CANOTTIERI PALERMO" con Vito Scarpello <b>+3P</b></li>
-          <li>Calzini variopinti/spaiati <b>+3P</b></li>
-          <li>Maglietta variopinta <b>+2P</b></li>
-          <li>Indossare Occhiali da Sole <b>+1P</b></li>
-          <li>Indossare un Cappellino <b>+1P</b></li>
-          <li>Selfie con Miele <b>+1P</b></li>
-          <li>Cazziatone da Beni <b>-10P</b></li>
-          <li>Fermarsi prima dell'arrivo <b>-5P</b></li>
-          <li>Arrivare in ritardo <b>-5P</b></li>
-          <li>Cadere in acqua <b>-5P</b></li>
-          <li>Litigare con un avversario <b>-5P</b></li>
-          <li>Rifiutarsi di buttare rifiuti <b>-2P</b></li>
-          <li>Tagliare il traguardo fuori dalle boe <b>-2P</b></li>
-          <li>Nome pronunciato male dal giudice in partenza <b>-1P</b></li>
-          <li>Ultimo a gareggiare <b>-1P</b></li>
-        </ul>
-      </div>  
-
+        <p class="text-left">
+          Ogni Atleta guadagna punti per ogni gara in base alla posizione di arrivo:
+        </p>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Posizione</th>
+              <th scope="col">Punti</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="col">1</th>
+              <td>Primo Posto</td><td class="text-success fw-bold">+50P</td>
+            </tr>
+            <tr>
+              <th scope="col">2</th>
+              <td>Secondo Posto</td><td class="text-success fw-bold">+30P</td>
+            </tr>
+            <tr>
+              <th scope="col">3</th>
+              <td>Terzo Posto</td><td class="text-success fw-bold">+20P</td>
+            </tr>
+            <tr>
+              <th scope="col">4</th>
+              <td>Ultimo Posto</td><td class="text-danger fw-bold">-10P</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="text-left">
+          Inoltre ogni Atleta guadagna o perde punti non appena compie per la prima volta una Azione Speciale
+           (ovvero non si guadagnano o perdono più punti ripetendo una stessa Azione Speciale).
+        </p>
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Azione Speciale</th>
+              <th scope="col">Punti</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="col">1</th>
+              <td>Video "A CANNONE" con Ficarra</td><td class="text-success fw-bold">+10P</td>
+            </tr>
+            <tr>
+              <th scope="col">2</th>
+              <td>Offrire cibo</td><td class="text-success fw-bold">+5P</td>
+            </tr>
+            <tr>
+              <th scope="col">3</th>
+              <td>Foto con salto in premiazione</td><td class="text-success fw-bold">+5P</td>
+            </tr>
+            <tr>
+              <th scope="col">4</th>
+              <td>Selfie con un Allenatore di Secondo Livello o superiore</td><td class="text-success fw-bold">+5P</td>
+            </tr>
+            <tr>
+              <th scope="col">5</th>
+              <td>Bevanda offerta a un Allenatore di Primo Livello o superiore</td><td class="text-success fw-bold">+5P</td>
+            </tr>
+            <tr>
+              <th scope="col">6</th>
+              <td>Selfie con Bruno Franchina</td><td class="text-success fw-bold">+5P</td>
+            </tr>
+            <tr>
+              <th scope="col">7</th>
+              <td>Batticinque a Ficarra</td><td class="text-success fw-bold">+3P</td>
+            </tr>
+            <tr>
+              <th scope="col">8</th>
+              <td>Video "VITTORIA PER LA CANOTTIERI PALERMO" con Vito Scarpello</td><td class="text-success fw-bold">+3P</td>
+            </tr>
+            <tr>
+              <th scope="col">8</th>
+              <td>Foto stringendo la mano a un avversario di un altro club</td><td class="text-success fw-bold">+3P</td>
+            </tr>
+            <tr>
+              <th scope="col">9</th>
+              <td>Indossare calzini variopinti/spaiati</td><td class="text-success fw-bold">+3P</td>
+            </tr>
+            <tr>
+              <th scope="col">10</th>
+              <td>Indossare una maglietta variopinta</td><td class="text-success fw-bold">+2P</td>
+            </tr>
+            <tr>
+              <th scope="col">11</th>
+              <td>Indossare occhiali da sole</td><td class="text-success fw-bold">+1P</td>
+            </tr>
+            <tr>
+              <th scope="col">12</th>
+              <td>Indossare un cappellino</td><td class="text-success fw-bold">+1P</td>
+            </tr>
+            <tr>
+              <th scope="col">13</th>
+              <td>Selfie con Miele</td><td class="text-success fw-bold">+1P</td>
+            </tr>
+            <tr>
+              <th scope="col">14</th>
+              <td>Cazziatone da Beni</td><td class="text-danger fw-bold">-10P</td>
+            </tr>
+            <tr>
+              <th scope="col">15</th>
+              <td>Fermarsi prima dell'arrivo</td><td class="text-danger fw-bold">-5P</td>
+            </tr>
+            <tr>
+              <th scope="col">16</th>
+              <td>Arrivare in ritardo</td><td class="text-danger fw-bold">-5P</td>
+            </tr>
+            <tr>
+              <th scope="col">17</th>
+              <td>Cadere in acqua</td><td class="text-danger fw-bold">-5P</td>
+            </tr>
+            <tr>
+              <th scope="col">18</th>
+              <td>Litigare con un avversario</td><td class="text-danger fw-bold">-5P</td>
+            </tr>
+            <tr>
+              <th scope="col">19</th>
+              <td>Rifiutarsi di buttare rifiuti</td><td class="text-danger fw-bold">-2P</td>
+            </tr>
+            <tr>
+              <th scope="col">20</th>
+              <td>Tagliare il traguardo fuori dalle boe</td><td class="text-danger fw-bold">-2P</td>
+            </tr>
+            <tr>
+              <th scope="col">21</th>
+              <td>Nome pronunciato male dal giudice in partenza</td><td class="text-danger fw-bold">-1P</td>
+            </tr>
+            <tr>
+              <th scope="col">22</th>
+              <td>Ultimo a gareggiare</td><td class="text-danger fw-bold">-1P</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </main>
+    <footer class="footer mt-auto py-5 bg-light text-center">
+      <div class="container">
+        <span class="text-muted">
+            Fantapoma - Il gioco del Canottaggio Virtuale
+        </span>
+      </div>
+    </footer>
 
     <!-- Optional JavaScript; choose one of the two! -->
 
