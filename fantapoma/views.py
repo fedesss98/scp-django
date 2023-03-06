@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic.edit import FormView
+from django import forms 
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -35,7 +37,7 @@ def view_athlete(request, id):
     if request.method == 'POST':
         """ Prenota atleta """
         if 'acquista' in request.POST:
-            franchs = athlete.adjusted_points
+            franchs = athlete.adjusted_price
             remain_franchs = user.player.franchs - franchs
             if remain_franchs >= 0:
                 print('Acquista')
@@ -48,7 +50,7 @@ def view_athlete(request, id):
                 messages.error(request, 'Non hai abbastanza Franchini per comprare!')
         elif 'rimuovi' in request.POST:
             athlete.players.remove(user)
-            franchs = athlete.adjusted_points
+            franchs = athlete.adjusted_price
             athlete.save()
             user.player.franchs = user.player.franchs + franchs
             context['buy'] = True
@@ -138,3 +140,22 @@ class CreateSpecialView(CreateView):
 
 class ListSpecialsView(ListView):
     model = Special
+
+class MedalForm(forms.Form):
+    gold = forms.IntegerField()
+    silver = forms.IntegerField()
+    bronze = forms.IntegerField()
+
+class MedalFormView(FormView):
+    template_name = 'fantapoma/submit_scores.html'
+    form_class = MedalForm
+
+    def form_valid(self, form):
+        gold = form.cleaned_data['gold']
+        silver = form.cleaned_data['silver']
+        bronze = form.cleaned_data['bronze']
+        points = gold * 3 + silver * 2 + bronze
+        athlete = Athlete.objects.get(pk=self.kwargs['pk'])
+        athlete.points += points
+        athlete.save()
+        return super().form_valid(form)

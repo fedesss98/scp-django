@@ -8,39 +8,39 @@
   <h3 class="text-muted fw-light fs-4">{{ player.username }}</h3>
 </div>
 <div class="container card-container mt-2">
-  <div class="container-fluid object">
+  <div class="container-fluid">
     <div class="row">
     {% for athlete in athletes %}
       <div class="col-sm-4 my-3">
         <div class="card shadow">
           <div class="card-header">
-            <h5>{{object.name}}</h5>
+            <h5>{{athlete.name}}</h5>
           </div>
           <div class="card-body">
-            <p class="card-text">Ha gareggiato a Poma dal {{object.first_time|date:'d/m/Y'}} fino al {{object.last_time|date:'d/m/Y'}}</p>
+            <p class="card-text">Ha gareggiato a Poma dal {{athlete.first_time|date:'d/m/Y'}} fino al {{athlete.last_time|date:'d/m/Y'}}</p>
             <ul class="list-group list-group-numbered">
               <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">Primi Posti:</div>
-                <span class="badge bg-primary rounded-pill">{{object.first}}</span>
+                <span class="badge bg-primary rounded-pill">{{athlete.first}}</span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">Secondi Posti:</div>
-                <span class="badge bg-primary rounded-pill">{{object.second}}</span>
+                <span class="badge bg-primary rounded-pill">{{athlete.second}}</span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">Terzi Posti:</div>
-                <span class="badge bg-primary rounded-pill">{{object.third}}</span>
+                <span class="badge bg-primary rounded-pill">{{athlete.third}}</span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">Totale Gare:</div>
-                <span class="badge bg-primary rounded-pill">{{object.total}}</span>
+                <span class="badge bg-primary rounded-pill">{{athlete.total}}</span>
               </li>
             </ul>
-            <h5 class="card-text text-end m-2">{{ object.adjusted_points }} Franchini</h5>
-            <a href="{% url 'view-athlete' object.id %}" class="btn btn-primary">Vedi</a>
+            <h5 class="card-text text-end m-2">{{ athlete.adjusted_points }} Franchini</h5>
+            <a href="{% url 'view-athlete' athlete.id %}" class="btn btn-primary">Vedi</a>
           </div>
           <div class="card-footer text-muted">
-            Prenotato da {{ object.bookings }} Giocatori.
+            Prenotato da {{ athlete.bookings }} Giocatori.
           </div>
         </div>
       </div>

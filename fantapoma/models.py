@@ -16,9 +16,12 @@ class Athlete(models.Model):
     third = models.IntegerField(default=0)
     first_time = models.DateField('First Race Date')
     last_time = models.DateField('Last Race Date')
+    price = models.IntegerField(default=0)
     points = models.IntegerField(default=0)
 
     players = models.ManyToManyField(User, blank=True)
+
+    is_user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL, related_name='user')
 
     def __str__(self):
         return self.name
@@ -56,10 +59,11 @@ class Athlete(models.Model):
         return n
 
     @property
-    def adjusted_points(self):
-        booking_term = self.points*(math.tanh(self.bookings/4))
-        adjusted_points = self.points + booking_term
+    def adjusted_price(self):
+        booking_term = self.price*(math.tanh(self.bookings/4))
+        adjusted_points = self.price + booking_term
         return int(adjusted_points)
+
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -69,6 +73,7 @@ class Player(models.Model):
 
     def __str__(self):
         return self.user.username
+
 
 class Race(models.Model):
     DEFAULT_RACE_TIME = datetime.timedelta(minutes=0, seconds=0, milliseconds=0)
@@ -85,6 +90,7 @@ class Race(models.Model):
 
     def __str__(self):
         return f'{self.athlete} - {self.location}, {self.date}'
+
 
 class Special(models.Model):
     COACH = 'CCH'

@@ -16,7 +16,9 @@
 {% endif %}
 
 <div class="container header mt-5">
-  <h2>{{ athlete.name }}</h2>
+  <h2>
+    {{ athlete.name }}{% if athlete.is_user is not None %}<em> A.K.A. {{ athlete.is_user }} </em>{% endif %}
+  </h2>
   <h3>{{ athlete.category }}</h3>
   <h3 class="text-muted fw-light fs-4">{{ athlete.club }}</h3>
   <h3 class="fw-light fs-4">{{ athlete.adjusted_points }} Franchini</h3>
