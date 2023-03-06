@@ -78,6 +78,9 @@ class Player(models.Model):
     def score(self):
         athletes = self.get_athletes()
         score = athletes.aggregate(Sum('points'))['points__sum']
+        # Add a second time the score of the Player True Athlete
+        if self.user.true_athlete:
+            score += self.user.true_athlete.points
         return score
 
     def __str__(self):
