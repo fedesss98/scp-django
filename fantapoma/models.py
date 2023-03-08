@@ -85,10 +85,10 @@ class Player(models.Model):
     @property
     def score(self):
         athletes = self.get_athletes()
-        score = athletes.aggregate(Sum('points'))['points__sum']
+        score = sum(athlete.total_points for athlete in athletes)
         # Add two times the scores of the Player's Athlete
         if hasattr(self.user, 'true_athlete'):
-            score += 2*self.user.true_athlete.race_points
+            score += 2*self.user.true_athlete.actions_points
         score = score if score is not None else 0
         return score
 
