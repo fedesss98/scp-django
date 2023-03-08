@@ -20,6 +20,8 @@ class Athlete(models.Model):
     last_time = models.DateField('Last Race Date')
     price = models.IntegerField(default=0)
     points = models.IntegerField(default=0)
+    race_points = models.IntegerField(default=0)
+    actions_points = models.IntegerField(default=0)
 
     players = models.ManyToManyField(User, blank=True)
     is_user = models.OneToOneField(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='true_athlete')
@@ -65,6 +67,10 @@ class Athlete(models.Model):
         adjusted_points = self.price + booking_term
         return int(adjusted_points)
 
+    @property
+    def total_points(self):
+        return self.race_points + self.actions_points
+
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -80,9 +86,9 @@ class Player(models.Model):
     def score(self):
         athletes = self.get_athletes()
         score = athletes.aggregate(Sum('points'))['points__sum']
-        # Add a second time the score of the Player True Athlete
+        # Add two times the scores of the Player's Athlete
         if hasattr(self.user, 'true_athlete'):
-            score += self.user.true_athlete.points
+            score += 2*self.user.true_athlete.race_points
         score = score if score is not None else 0
         return score
 
