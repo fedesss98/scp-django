@@ -17,7 +17,7 @@
           <tbody>
             {% for athlete in athlete_list %}
             <tr>
-                <td>{{ athlete.id }}</td><td>{{ athlete.name }}</td><td>{{ athlete.points }}</td>
+                <td>{{ athlete.id }}</td><td>{{ athlete.name }}</td><td>{{ athlete.total_points }}</td>
                 <td>
                     <a href="{% url 'submit-points' athlete.id %}" class="btn btn-primary">Aggiorna Punti</a>
                 </td>

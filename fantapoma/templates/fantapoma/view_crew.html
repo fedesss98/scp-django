@@ -36,7 +36,7 @@
                 <span class="badge bg-primary rounded-pill">{{athlete.total}}</span>
               </li>
             </ul>
-            <h5 class="card-text text-end m-2">{{ athlete.points }} Punti</h5>
+            <h5 class="card-text text-end m-2">{{ athlete.total_points }} Punti</h5>
             <a href="{% url 'view-athlete' athlete.id %}" class="btn btn-primary">Vedi</a>
           </div>
           <div class="card-footer text-muted">
@@ -49,25 +49,4 @@
   </div>
 </div>
   
-{% endblock %}
-
-{% block footer %}
-<footer class="footer mt-auto py-5 bg-light text-center">
-  <div class="container-fluid text-left">
-    <div class="row justify-content-between">
-      <div class="col-4">
-        <span class="text-muted">
-          Fantapoma - Il gioco del Canottaggio Virtuale
-        </span>
-      </div>
-      <div class="col-8 text-right">
-        <span class="text-muted">
-          Made by Federico Amato -
-          <a href="mailto:fedesss98@hotmail.it" class="text-reset">fedesss98@hotmail.it</a> / 
-          <a href="https://www.instagram.com/fedeamat/" class="text-reset">@fedeamat</a> /
-        </span>
-      </div>
-    </div>
-  </div>
-</footer>
 {% endblock %}
