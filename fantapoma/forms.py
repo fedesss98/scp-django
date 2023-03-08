@@ -41,7 +41,6 @@ class UpdatePointsForm(forms.ModelForm):
         fields = []
 
     def save(self, commit=True):
-        print(self.instance.points)
         ACTION_POINTS_DICT = {
             'golds': 50,
             'silvers': 30,
