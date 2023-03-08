@@ -81,6 +81,5 @@ class UpdatePointsForm(forms.ModelForm):
         self.instance.race_points = race_points
         for action in self.cleaned_data['actions']:
             actions_points += ACTION_POINTS_DICT[action]
-        self.instance.points = actions_points
-        print(self.instance.points)
+        self.instance.actions_points = actions_points
         return super().save(commit)

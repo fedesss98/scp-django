@@ -19,7 +19,6 @@ class Athlete(models.Model):
     first_time = models.DateField('First Race Date')
     last_time = models.DateField('Last Race Date')
     price = models.IntegerField(default=0)
-    points = models.IntegerField(default=0)
     race_points = models.IntegerField(default=0)
     actions_points = models.IntegerField(default=0)
 
