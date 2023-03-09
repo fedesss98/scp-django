@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from django.views.generic.edit import FormView
-from django import forms 
+from django.db.models import F
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -206,3 +206,21 @@ class UpdatePointsView(LoginRequiredMixin, FormView):
     
 class EventsView(TemplateView):
     template_name = 'fantapoma/events.html'
+
+
+class StatisticsView(TemplateView):
+    template_name = 'fantapoma/statistics.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        top_athletes = Athlete.objects.annotate(
+            points_sum=F('race_points') + F('actions_points')
+        ).order_by('-points_sum')[:5]
+        top_race_athletes = Athlete.objects.order_by('-race_points')[:5]
+        top_actions_athletes = Athlete.objects.order_by('-actions_points')[:5]
+        context['top_athletes'] = top_athletes
+        context['race_points'] = [athlete.race_points for athlete in top_athletes]
+        context['actions_points'] = [athlete.actions_points for athlete in top_athletes]
+        context['top_race_athletes'] = top_race_athletes
+        context['top_actions_athletes'] = top_actions_athletes
+        return context
