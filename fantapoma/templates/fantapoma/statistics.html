@@ -14,8 +14,16 @@
     </a>
   </header>
   <main class='container px-2 mx-auto my-5'>
-    <h3>Migliori cinque Atleti per Punti Totali</h3>
-    <canvas id="top_athletes_chart"></canvas>
+    <div class="container top5 top5--overall mt-5 ">
+      <h3 class='mb-3'>Migliori cinque Atleti per Punti Totali</h3>
+      <canvas id="top_athletes_chart"></canvas>
+    </div>
+
+    <div class="container top5 top5--actions mt-5">
+      <h3 class='mb-3'>Migliori cinque Atleti per Azioni Speciali</h3>
+      <canvas id="top_actions_chart"></canvas>
+    </div>
+
   </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -58,6 +66,31 @@
                 stacked: true
               }
             }
+        }
+    });
+
+    const actions_labels = [];
+    const actions_data = [];
+    {% for athlete in top_actions_athletes %}
+            actions_labels.push('{{ athlete.name }}');
+            actions_data.push({{ athlete.actions_points }});
+    {% endfor %}
+
+    const actions_ctx = document.getElementById('top_actions_chart').getContext('2d');
+    const TopActionsChart = new Chart(actions_ctx, {
+        type: 'bar',
+        data: {
+          labels: actions_labels,
+          datasets: [{
+              label: 'Azioni Speciali',
+              data: actions_data,
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+          }]
+        },
+        options: {
+            indexAxis: 'y',
         }
     });
 </script>
