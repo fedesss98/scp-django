@@ -218,6 +218,7 @@ class StatisticsView(TemplateView):
         ).order_by('-points_sum')[:5]
         top_race_athletes = Athlete.objects.order_by('-race_points')[:5]
         top_actions_athletes = Athlete.objects.order_by('-actions_points')[:5]
+        context['best_athlete'] = top_athletes[0] 
         context['top_athletes'] = top_athletes
         context['race_points'] = [athlete.race_points for athlete in top_athletes]
         context['actions_points'] = [athlete.actions_points for athlete in top_athletes]
