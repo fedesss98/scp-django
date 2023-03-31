@@ -21,4 +21,5 @@ urlpatterns = [
     path('fantapoma/', include('fantapoma.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('fantaplayers.urls', namespace='fantaplayers')),
+    path('events/', include('events.urls', namespace='events'))
 ]

@@ -12,8 +12,9 @@ from .forms import UpdatePointsForm
 
 from django.contrib import messages
 
+
 def index(request):
-    #return HttpResponse("Fantapoma")
+    # return HttpResponse("Fantapoma")
     return render(request, 'fantapoma/index.html', {
         'title': 'Fantapoma: - Il gioco di canottaggio virtuale',
         'nav-home': 'active'})
@@ -70,9 +71,8 @@ def view_athlete(request, id):
             context['buy'] = True
             context['sell'] = False
         request.user.player.save()
-
-
     return render(request, 'fantapoma/view_athlete.html', context)
+
 
 class MyCrewView(LoginRequiredMixin, ListView):
     model = Athlete

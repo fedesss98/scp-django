@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'fantapoma.apps.FantapomaConfig',
     'goscp_site.apps.GoscpSiteConfig',
     'fantaplayers.apps.FantaplayersConfig',
+    'events.apps.EventsConfig',
 ]
 
 MIDDLEWARE = [
