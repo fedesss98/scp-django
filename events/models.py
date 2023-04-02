@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from fantapoma.models import Athlete
@@ -34,7 +36,7 @@ class Club(models.Model):
 
 
 class Event(models.Model):
-    url = models.CharField(max_length=200)
+    url = models.CharField(max_length=200, unique=True, default=uuid.uuid4)
     date = models.DateField()
     location = models.CharField(max_length=80)
     name = models.CharField(max_length=80)
@@ -90,4 +92,8 @@ class Crew(models.Model):
 
     def __str__(self):
         return f"{self.event} - {self.bow_number}"
+
+
+class Athlete(models.Model):
+    name = models.CharField(max_length=80)
 

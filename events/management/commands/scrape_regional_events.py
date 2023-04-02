@@ -3,40 +3,40 @@ Scrape regional events from canottaggioservice.net
 and creates instances of the Event model
 """
 from django.core.management import BaseCommand, CommandError
+from django.db.utils import IntegrityError
 from events.models import Event
 
 from datetime import datetime
-import logging
 import requests
 from bs4 import BeautifulSoup
 
-logging.basicConfig(level=logging.INFO)
+BASE_URL = 'https://canottaggioservice.canottaggio.net/'
 
 
 class Command(BaseCommand):
     help = 'Scrape Canottaggioservice.net to get urls of all regional events'
 
+    def add_arguments(self, parser):
+        # Optional URL argument
+        parser.add_argument(
+            '--url',
+            type=str,
+            help='The URL of the event to be created'
+        )
+
     def handle(self, *args, **options):
-        base_events_url = 'https://canottaggioservice.canottaggio.net/'
         soup = self.request_page()
         table = soup.find('div', class_='box').find()
         for row in table.find_all('tr'):
-            info = row.find_all('td')
-            url = base_events_url + info[0].find('a').get('href')
-            date = self.format_date(info[1].string.strip())
-            location = info[2].string.strip().title()
-            name = info[3].string.strip().title()
-            logging.info(f'{"-"*10}\nURL: {url}\nDate: {date}\nLocation: {location}\nName: {name}')
-            # Create the Event object
-            event = Event(
-                url=url,
-                date=date,
-                location=location,
-                name=name,
-                type='Regionale',
-            )
-            event.save()
-        logging.info('Scraping completed')
+            if options['url'] is not None:
+                links = [BASE_URL + link.get('href') for link in row.find_all('a')]
+                if options['url'] in links:
+                    self.stdout.write('Found the requested event')
+                    self.create_event(row)
+                    break
+            else:
+                self.create_event(row)
+        self.stdout.write(self.style.SUCCESS('Scraping completed'))
 
     @staticmethod
     def format_date(date_string):
@@ -56,6 +56,27 @@ class Command(BaseCommand):
         }
         page = requests.get(url, headers=headers, params=params)
         return BeautifulSoup(page.text, 'html.parser')
+
+    def create_event(self, row):
+        info = row.find_all('td')
+        url = BASE_URL + info[0].find('a').get('href')
+        date = self.format_date(info[1].string.strip())
+        location = info[2].string.strip().title()
+        name = info[3].string.strip().title()
+        self.stdout.write(f'{"-" * 10}\nURL: {url}\nDate: {date}\nLocation: {location}\nName: {name}')
+        # Create the Event object
+        event = Event(
+            url=url,
+            date=date,
+            location=location,
+            name=name,
+            type='Regionale',
+        )
+        try:
+            event.save()
+        except IntegrityError:
+            self.stdout.write(self.style.ERROR(f'Event {name} already exists'))
+        return None
 
 
 # DEBUGGING FEATURES

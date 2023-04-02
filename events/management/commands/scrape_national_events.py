@@ -3,14 +3,12 @@ Scrape national events from canottaggioservice.net
 and creates instances of the Event model
 """
 from django.core.management import BaseCommand, CommandError
+from django.db.utils import IntegrityError
 from events.models import Event
 
 from datetime import datetime
-import logging
 import requests
 from bs4 import BeautifulSoup
-
-logging.basicConfig(level=logging.INFO)
 
 
 class Command(BaseCommand):
@@ -26,7 +24,7 @@ class Command(BaseCommand):
             date = self.format_date(info[1].string.strip())
             location = info[2].string.strip().title()
             name = info[3].string.strip().title()
-            logging.info(f'{"-"*10}\nURL: {url}\nDate: {date}\nLocation: {location}\nName: {name}')
+            self.stdout.write(f'{"-"*10}\nURL: {url}\nDate: {date}\nLocation: {location}\nName: {name}')
             # Create the Event object
             event = Event(
                 url=url,
@@ -35,8 +33,11 @@ class Command(BaseCommand):
                 name=name,
                 type='NAT',
             )
-            event.save()
-        logging.info('Scraping completed')
+            try:
+                event.save()
+            except IntegrityError:
+                self.stdout.write(self.style.ERROR(f'Event {name} already exists'))
+        self.stdout.write(self.style.SUCCESS('Scraping completed'))
 
     @staticmethod
     def format_date(date_string):
