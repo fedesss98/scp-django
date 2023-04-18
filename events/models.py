@@ -2,9 +2,16 @@ import uuid
 
 from django.db import models
 
-from fantapoma.models import Athlete
+# from fantapoma.models import Athlete
 
 # Create your models here.
+
+
+class Athlete(models.Model):
+    name = models.CharField(max_length=80)
+
+    def __str__(self):
+        return self.name
 
 
 class Club(models.Model):
@@ -29,7 +36,7 @@ class Club(models.Model):
         (PRD, 'PARADISO')
     ]
     name = models.CharField(max_length=50, choices=CLUB_CHOICES)
-    athletes = models.ManyToManyField(Athlete)
+    athletes = models.ManyToManyField(Athlete, blank=True)
 
     def __str__(self):
         return self.name
@@ -94,6 +101,5 @@ class Crew(models.Model):
         return f"{self.event} - {self.bow_number}"
 
 
-class Athlete(models.Model):
-    name = models.CharField(max_length=80)
+
 

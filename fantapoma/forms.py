@@ -1,5 +1,5 @@
 from django import forms
-from .models import Athlete
+from .models import FantaAthlete
 
 class UpdatePointsForm(forms.ModelForm):
     SPECIAL_ACTIONS = (
@@ -37,7 +37,7 @@ class UpdatePointsForm(forms.ModelForm):
         choices=SPECIAL_ACTIONS, widget=forms.CheckboxSelectMultiple)
 
     class Meta:
-        model = Athlete
+        model = FantaAthlete
         fields = []
 
     def save(self, commit=True):

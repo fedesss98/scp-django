@@ -9,7 +9,7 @@ import datetime
 # Create your models here.
 
 
-class Athlete(models.Model):
+class FantaAthlete(models.Model):
     name = models.CharField(max_length=200)
     born = models.DateField('Date of Birth', default=datetime.date(2000,1,1))
     total = models.IntegerField('Total Races', default=0)

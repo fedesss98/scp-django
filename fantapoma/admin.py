@@ -19,7 +19,7 @@ class UserAdmin(BaseUserAdmin):
 
 
 # Register your models here.
-admin.site.register(Athlete)
+admin.site.register(FantaAthlete)
 admin.site.register(Special)
 admin.site.register(Player)
 

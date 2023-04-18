@@ -6,7 +6,7 @@ from django.db.models import F
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from fantapoma.models import Athlete, Special
+from fantapoma.models import FantaAthlete, Special
 from django.contrib.auth.models import User
 from .forms import UpdatePointsForm
 
@@ -21,7 +21,7 @@ def index(request):
 
 
 def view_athlete(request, id):
-    athlete = Athlete.objects.get(id=id)
+    athlete = FantaAthlete.objects.get(id=id)
     user = request.user
     races = athlete.race_set.all()
     buy = True
@@ -75,7 +75,7 @@ def view_athlete(request, id):
 
 
 class MyCrewView(LoginRequiredMixin, ListView):
-    model = Athlete
+    model = FantaAthlete
     template_name = "fantapoma/mycrew.html"
 
     context_object_name = 'player'
@@ -92,16 +92,16 @@ class MyCrewView(LoginRequiredMixin, ListView):
 
 
 # MARKETPLACE
-class AthleteView(ListView):
+class FantaAthleteView(ListView):
     template_name = "fantapoma/marketplace.html"
-    model = Athlete
+    model = FantaAthlete
     ordering = '-name'
 
     def get_queryset(self):
         athlete_name = self.request.GET.get('athlete_name') 
         queryset = super().get_queryset().order_by('name')
         if athlete_name is not None:
-            queryset = Athlete.objects.filter(name__icontains=athlete_name)
+            queryset = FantaAthlete.objects.filter(name__icontains=athlete_name)
         print(queryset)
         return queryset
     
@@ -150,7 +150,7 @@ class ViewCrew(DetailView):
         if pk is None:
             pk = self.request.user.id
 
-        context['athletes'] = Athlete.objects.filter(players__pk=pk)
+        context['athletes'] = FantaAthlete.objects.filter(players__pk=pk)
         return context
 
     
@@ -163,8 +163,8 @@ class ListSpecialsView(ListView):
     model = Special
 
 
-class RawAthleteListView(ListView):
-    model = Athlete
+class RawFantaAthleteListView(ListView):
+    model = FantaAthlete
     template_name = 'fantapma/athlete_list.html'
 
 
@@ -183,7 +183,7 @@ class UpdatePointsView(LoginRequiredMixin, FormView):
         context = super().get_context_data(**kwargs)
         athlete_id = self.kwargs.get('athlete_id')
         if athlete_id:
-            athlete = Athlete.objects.get(id=athlete_id)
+            athlete = FantaAthlete.objects.get(id=athlete_id)
             context['athlete'] = athlete.name
         return context
 
@@ -192,7 +192,7 @@ class UpdatePointsView(LoginRequiredMixin, FormView):
         kwargs = super().get_form_kwargs()
         athlete_id = self.kwargs.get('athlete_id')
         if athlete_id:
-            athlete = Athlete.objects.get(id=athlete_id)
+            athlete = FantaAthlete.objects.get(id=athlete_id)
         else:
             athlete = self.request.user.true_athlete
         kwargs['instance'] = athlete
@@ -213,11 +213,11 @@ class StatisticsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        top_athletes = Athlete.objects.annotate(
+        top_athletes = FantaAthlete.objects.annotate(
             points_sum=F('race_points') + F('actions_points')
         ).order_by('-points_sum')[:5]
-        top_race_athletes = Athlete.objects.order_by('-race_points')[:5]
-        top_actions_athletes = Athlete.objects.order_by('-actions_points')[:5]
+        top_race_athletes = FantaAthlete.objects.order_by('-race_points')[:5]
+        top_actions_athletes = FantaAthlete.objects.order_by('-actions_points')[:5]
         context['best_athlete'] = top_athletes[0] 
         context['top_athletes'] = top_athletes
         context['race_points'] = [athlete.race_points for athlete in top_athletes]
