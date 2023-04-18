@@ -18,22 +18,32 @@ class Club(models.Model):
     SCP = 'PALERMO SC'
     TLMR = 'TELIMAR'
     CCRL = 'LAURIA CCR'
-    AUGST = 'AUGUSTA'
-    ORTG = 'ORTIGIA'
+    AUGST = 'AUGUSTA CN'
+    ORTG = 'ORTIGIA CC'
     CUS = 'CUS PALERMO'
     PLR = 'PELOROROW'
-    UNS = 'UNIONE SICILIANA'
-    PRD = 'PARADISO'
+    UNS = 'UN SICILIANA'
+    PRD = 'PARADISO CN'
+    THL = 'THALATTA SC'
+    MSS = 'MESSINA CN'
+    CUSC = 'CUS CATANIA'
+    MDLL = 'MONDELLO'
+    CRD = 'CARIDDI CC'
     CLUB_CHOICES = [
         (SCP, 'PALERMO SC'),
         (TLMR, 'TELIMAR'),
         (CUS, 'CUS PALERMO'),
         (PLR, 'PELOROROW'),
         (CCRL, 'LAURIA CCR'),
-        (AUGST, 'AUGUSTA'),
-        (ORTG, 'ORTIGIA'),
+        (AUGST, 'AUGUSTA CN'),
+        (ORTG, 'ORTIGIA CC'),
         (UNS, 'UNIONE SICILIANA'),
-        (PRD, 'PARADISO')
+        (PRD, 'PARADISO CN'),
+        (THL, 'THALATTA SC'),
+        (MSS, 'MESSINA CN'),
+        (CUSC, 'CUS CATANIA'),
+        (MDLL, 'MONDELLO'),
+        (CRD, 'CARIDDI CC'),
     ]
     name = models.CharField(max_length=50, choices=CLUB_CHOICES)
     athletes = models.ManyToManyField(Athlete, blank=True)
@@ -98,7 +108,7 @@ class Crew(models.Model):
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.event} - {self.bow_number}"
+        return f"{self.race} - {self.bow_number}"
 
 
 
