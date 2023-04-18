@@ -2,27 +2,27 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'fantapoma' %}">Fantapoma</a>
+    <a class="navbar-brand" href="{% url 'fantapoma:index' %}">Fantapoma</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="{% url 'fantapoma' %}">Home</a>
+          <a class="nav-link" aria-current="page" href="{% url 'fantapoma:index' %}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'leaderboard' %}">Classifica</a>
+          <a class="nav-link" href="{% url 'fantapoma:leaderboard' %}">Classifica</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'events:list-events' %}">Eventi</a>
         </li>
         {% if request.user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'marketplace' %}">Marketplace</a>
+          <a class="nav-link" href="{% url 'fantapoma:marketplace' %}">Marketplace</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'mycrew' %}">My Crew</a>
+          <a class="nav-link" href="{% url 'fantapoma:mycrew' %}">My Crew</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'fantaplayers:profile' request.user.id %}">Profilo</a>
@@ -47,7 +47,7 @@
 <nav class="nav justify-content-center">
   <span class="navbar-text">
     {{ request.user|title }}, hai ancora {{ request.user.player.franchs }} Franchini e 
-    {{ request.user.athlete_set.count }} atleti <a href={% url 'mycrew' %}>nel tuo Otto</a>.
+    {{ request.user.athlete_set.count }} atleti <a href={% url 'fantapoma:mycrew' %}>nel tuo Otto</a>.
   </span>
 </nav>
 {% endif %}

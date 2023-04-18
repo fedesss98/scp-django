@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Eventi{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h2>Eventi</h2>
+    <p>Usa questa tabella per inserire i tuoi punteggi ottenuti negli eventi a cui hai partecipato:</p>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Data</th>
+                <th scope="col">Manifestazione</th>
+                <th scope="col">Risultati</th>
+                <th scope="col">Fantapoma</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+          <tr style="transform: rotate(0);">
+            <th scope="row">{{ event.date }}</th>
+            <td><a href="{% url 'events:event_detail' event.pk %}">{{ event.name }}</a></td>
+            <td><a href="{% url 'events:event_detail' event.pk %}" class="btn btn-primary">Vai</a></td>
+            <td><a href="{% url 'fantapoma:statistics' %}" class="btn btn-secondary">Vai</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+</div>
+{% endblock content %}

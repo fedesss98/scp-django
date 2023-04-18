@@ -7,4 +7,5 @@ app_name = 'events'
 urlpatterns = [
     path('', EventListView.as_view(), name='list-events'),
     path('event/<int:pk>/', EventDetailView.as_view(), name='event_detail'),
+    path('fantapoma/', include('fantapoma.urls', namespace='fantapoma')),
 ]
