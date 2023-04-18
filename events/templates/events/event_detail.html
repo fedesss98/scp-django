@@ -1,0 +1,42 @@
+{% extends 'fantapoma/base.html' %}
+
+{% block title %}Eventi{% endblock %}
+
+{% block content %}
+
+<h1>{{ event.name }}</h1>
+<p>Date: {{ event.date }}</p>
+<p>Location: {{ event.location }}</p>
+<p>Type: {{ event.type }}</p>
+
+<h2>Races</h2>
+<ul>
+    {% for race in event.race_set.all %}
+        <li>
+            <h3>Race {{ race.number }}</h3>
+            <p>Time: {{ race.time }}</p>
+            <p>Boat Type: {{ race.boat_type }}</p>
+            <p>Category: {{ race.category }}</p>
+            <p>Gender: {{ race.gender }}</p>
+
+            <h4>Crews</h4>
+            <ul>
+                {% for crew in race.crew_set.all %}
+                    <li>
+                        <p>Bow Number: {{ crew.bow_number }}</p>
+                        <p>Club: {{ crew.club }}</p>
+
+                        <h5>Athletes</h5>
+                        <ul>
+                            {% for athlete in crew.athletes.all %}
+                                <li>{{ athlete.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

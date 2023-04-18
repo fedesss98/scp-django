@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 from fantapoma.views import MyCrewView, FantaAthleteView, LeaderboardView, ViewCrew, CreateSpecialView, ListSpecialsView, UpdatePointsView, RawFantaAthleteListView, EventsView, StatisticsView
@@ -9,7 +9,6 @@ urlpatterns = [
         path('marketplace/', FantaAthleteView.as_view(), name='marketplace'),
         path('view_athlete/<int:id>', views.view_athlete, name='view-athlete'),
         path('leaderboard', LeaderboardView.as_view(), name='leaderboard'),
-        path('events', EventsView.as_view(), name='events'),
         path('statistics/', StatisticsView.as_view(), name='statistics'),
         path('view_crew/<str:pk>/', ViewCrew.as_view(), name='view-crew'),
         path('view_crew/', ViewCrew.as_view(), name='view-crew'),

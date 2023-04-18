@@ -205,7 +205,7 @@ class UpdatePointsView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
     
 class EventsView(TemplateView):
-    template_name = 'fantapoma/events.html'
+    template_name = 'fantapoma/../events/templates/events/events.html'
 
 
 class StatisticsView(TemplateView):

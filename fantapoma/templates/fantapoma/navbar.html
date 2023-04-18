@@ -15,7 +15,7 @@
           <a class="nav-link" href="{% url 'leaderboard' %}">Classifica</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'events' %}">Eventi</a>
+          <a class="nav-link" href="{% url 'events:list-events' %}">Eventi</a>
         </li>
         {% if request.user.is_authenticated %}
         <li class="nav-item">
