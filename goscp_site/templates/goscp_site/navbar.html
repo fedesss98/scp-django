@@ -12,7 +12,7 @@
           <a class="nav-link" aria-current="page" href="{% url 'goscp-home' %}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'leaderboard' %}">Atleti</a>
+          <a class="nav-link" href="{% url 'fantapoma:leaderboard' %}">Atleti</a>
         </li>
         {% if request.user.is_authenticated %}
         <li class="nav-item">
