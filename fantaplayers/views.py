@@ -16,7 +16,7 @@ class CreatePlayer(CreateView):
     model = User
     form_class = PlayerCreationForm
     template_name = 'registration/register.html'
-    success_url = reverse_lazy('fantapoma')
+    success_url = reverse_lazy('fantapoma:index')
 
     def form_valid(self, form):
         form.save()
