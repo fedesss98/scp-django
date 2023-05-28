@@ -18,7 +18,7 @@
 <div class="container profile">
     <h1>{{ user.username }}</h1>
     <h3 class='text-muted fw-light'>
-        <a href={% url 'view-athlete' user.true_athlete.id %} class="text-reset">
+        <a href={% url 'fantapoma:view-athlete' user.true_athlete.id %} class="text-reset">
             {{ user.true_athlete }}
         </a>
     </h3>
@@ -26,7 +26,7 @@
     <hr>
     <h3>Il tuo 8+</h3>
     <p class="lead">{{ user.player.team_name }}</p>
-    <a href={% url 'mycrew' %} class='btn btn-primary'>Visualizza</a>
+    <a href={% url 'fantapoma:mycrew' %} class='btn btn-primary'>Visualizza</a>
 </div>
 {% endblock content %}
 

@@ -134,8 +134,8 @@ STATIC_URL = '/fantapoma/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = "fantapoma"
-LOGOUT_REDIRECT_URL = "fantapoma"
+LOGIN_REDIRECT_URL = "fantapoma:index"
+LOGOUT_REDIRECT_URL = "fantapoma:index"
 
 MESSAGE_TAGS = {
         messages.DEBUG: 'alert-secondary',
