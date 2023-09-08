@@ -34,22 +34,19 @@ class Command(BaseCommand):
             program_link = self.search_race_program(table)
         if program_link is None:
             raise Exception("No program link found")
-        else:
-            soup = self.request_page(BASE_URL + program_link)
-            self.scrape_race_plan(soup)
+        soup = self.request_page(BASE_URL + program_link)
+        self.scrape_race_plan(soup)
         return None
 
     @staticmethod
     def find_race_table(soup):
         outer_table = soup.find('div', class_='box').find()
-        inner_table = outer_table.find_all('table')[1]
-        return inner_table
+        return outer_table.find_all('table')[1]
 
     @staticmethod
     def format_date(date_string):
         date_object = datetime.strptime(date_string, '%d/%m/%Y')
-        formatted_date_string = date_object.strftime('%Y-%m-%d')
-        return formatted_date_string
+        return date_object.strftime('%Y-%m-%d')
 
     @staticmethod
     def request_page(url):
@@ -88,7 +85,7 @@ class Command(BaseCommand):
         sex = words[-1]
         words = words[:-1]
         i = 0
-        while words[i].isupper() and not words[i].lower() in categories:
+        while words[i].isupper() and words[i].lower() not in categories:
             i += 1
         boat = ' '.join(words[:i])
         category = ' '.join(words[i:])
@@ -98,7 +95,7 @@ class Command(BaseCommand):
         race_number = info[2].strip()
         race_time = info[7].strip().replace('\xa0', '')
         race_boat, category, sex = self.take_boat_info(info[8].split('\xa0')[0].strip())
-        race_info = {
+        return {
             'number': race_number,
             'time': race_time,
             'boat_type': race_boat,
@@ -107,15 +104,12 @@ class Command(BaseCommand):
             'type': info[8].split('\xa0')[-1].strip(),
             'event': self.event,
         }
-        return race_info
 
     def create_race(self, table):
         # Take the header of the race (in parent table)
         race_info_table = table.parent.previous_sibling.previous_sibling.find('td', class_='t3')
-        race_infos = [s for s in race_info_table.strings]
-        # Create a Race object with race infos
-        race = Race.objects.create(**self.format_race_info(race_infos))
-        return race
+        race_infos = list(race_info_table.strings)
+        return Race.objects.create(**self.format_race_info(race_infos))
 
     @staticmethod
     def normalize_athletes_names(athlete):

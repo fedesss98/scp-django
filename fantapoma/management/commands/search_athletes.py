@@ -47,16 +47,15 @@ def make_curriculum_dataframe(curriculum, name, dob):
     )
     if len(df) == 0:
         raise Exception("No entry in canottaggioservice.net")
-    else:
-        df = df[0]
-        df = df.iloc[:, [1, 2, 3, 5, 6, 7, 8, 9]].dropna(how='all')
-        df.columns = ['Data', 'Località', 'Manifestazione', 'Posizione', 'Tempo', 'Barca', 'Categoria', 'Società']
-        df[['Data', 'Località', 'Manifestazione']] = df[['Data', 'Località', 'Manifestazione']].fillna(
-            method='ffill',
-        )
-        df['Posizione'] = df['Posizione'].fillna('Non Pervenuto')
-        df['Atleta'] = name
-        df['Data di Nascita'] = dob
+    df = df[0]
+    df = df.iloc[:, [1, 2, 3, 5, 6, 7, 8, 9]].dropna(how='all')
+    df.columns = ['Data', 'Località', 'Manifestazione', 'Posizione', 'Tempo', 'Barca', 'Categoria', 'Società']
+    df[['Data', 'Località', 'Manifestazione']] = df[['Data', 'Località', 'Manifestazione']].fillna(
+        method='ffill',
+    )
+    df['Posizione'] = df['Posizione'].fillna('Non Pervenuto')
+    df['Atleta'] = name
+    df['Data di Nascita'] = dob
     return df
 
 

@@ -37,16 +37,13 @@ class Event:
         }
         # Take the webpage
         page = requests.get(self.url, headers=headers)
-        # Make the page a html soup
-        soup = BeautifulSoup(page.text, 'html.parser')
-        return soup
+        return BeautifulSoup(page.text, 'html.parser')
 
     @staticmethod
     def find_event_info(soup):
         # Top section with Event info
         section = soup.find('td', class_='centercoltext')
-        name_and_date = section.find_all('tr')[3].string
-        return name_and_date
+        return section.find_all('tr')[3].string
 
     @property
     def event_name(self):
@@ -64,15 +61,13 @@ class Event:
     def find_event_links(soup):
         # The section "Documenti della regata" is a div class 'box'
         section_links = soup.find('div', class_='box')
-        rows = section_links.find_all('tr')
-        return rows
+        return section_links.find_all('tr')
 
     @property
     def program_url(self):
         rows = self.find_event_links(self.soup)
         for row in rows:
-            link = row.find('a')
-            if link:
+            if link := row.find('a'):
                 if row.find_all('td')[1].text == "PROGRAMMA GARE":
                     self._program_url = link.get('href')
         return BASE_URL + self._program_url
@@ -81,10 +76,9 @@ class Event:
     def results_url(self):
         rows = self.find_event_links(self.soup)
         for row in rows:
-            link = row.find('a')
-            if link:
+            if link := row.find('a'):
                 text = row.find_all('td')[1].text
-                if text == "RISULTATI FINALI" or text == "RISULTATI GARE":
+                if text in ["RISULTATI FINALI", "RISULTATI GARE"]:
                     self._results_url = link.get('href')
         return BASE_URL + self._results_url
 
@@ -97,7 +91,7 @@ class ProgramExtractor:
         self.soup = self.request_race()
 
         self.race_plan = pd.DataFrame()
-        self.race_infos_index = dict()
+        self.race_infos_index = {}
         self.registered_athletes = None
 
         # Extract program
@@ -120,7 +114,7 @@ class ProgramExtractor:
         sex = words[-1]
         words = words[:-1]
         i = 0
-        while words[i].isupper() and not words[i].lower() in categories:
+        while words[i].isupper() and words[i].lower() not in categories:
             i += 1
         boat = ' '.join(words[:i])
         category = ' '.join(words[i:])
@@ -130,28 +124,24 @@ class ProgramExtractor:
         race_number = info[2].strip()
         race_time = info[7].strip().replace('\xa0', '')
         race_boat, category, sex = self.take_boat_info(info[8].split('\xa0')[0].strip())
-        race_info = {
+        return {
             'Numero Gara': race_number,
             'Orario': race_time,
             'Specialità': race_boat,
             'Categoria': category,
             'Sesso': sex,
-            'Tipo Gara': info[8].split('\xa0')[-1].strip()
+            'Tipo Gara': info[8].split('\xa0')[-1].strip(),
         }
-        return race_info
 
     def get_all_clubs(self):
         # Clubs names are the only with css class "font-weight: bolder"
         html_socs = self.soup.find_all("font", attrs={'style': 'font-weight:bolder;'})
-        # Take unique club names,
-        # removing numbers in parentheses next to the names that stands for same club's crew in the same race
-        clubs = np.unique(np.array([soc.string.split('(')[0] for soc in html_socs]))
-        return clubs
+        return np.unique(np.array([soc.string.split('(')[0] for soc in html_socs]))
 
     def make_race_infos(self, table):
         # Take the header of the race (in parent table)
         race_info_table = table.parent.previous_sibling.previous_sibling.find('td', class_='t3')
-        race_infos = [s for s in race_info_table.strings]
+        race_infos = list(race_info_table.strings)
         # Make a dictionary from the race header with info of the race
         race_infos = self.format_race_info(race_infos)
         return race_infos["Numero Gara"], race_infos
@@ -174,7 +164,7 @@ class ProgramExtractor:
 
     def make_race(self, table_socs):
         # Initialize dictionary of the race crews
-        race = dict()
+        race = {}
         bow_numbers = []
         for soc in table_socs:
             bow_number, soc_name, athletes = self.make_race_crew(soc)
@@ -184,12 +174,12 @@ class ProgramExtractor:
         # Add empty lanes
         for i in range(1, 9):
             if i not in bow_numbers:
-                race[(i, None)] = [np.nan for at in athletes]
+                race[(i, None)] = [np.nan for _ in athletes]
         return pd.DataFrame(race)
 
     def make_race_plan(self):
         # The race plan will be a dictionary with race DataFrames labeled by race number
-        race_plan = dict()
+        race_plan = {}
         # This dictionary will label race infos by race number
         race_infos_index = pd.DataFrame()
 
@@ -213,9 +203,7 @@ class ProgramExtractor:
         }
         # Take the webpage
         program = requests.get(self.url, headers=headers)
-        # Make the page a html soup
-        soup = BeautifulSoup(program.text, 'html.parser')
-        return soup
+        return BeautifulSoup(program.text, 'html.parser')
 
     def get_clubs_athletes(self):
         clubs_groups = self.race_plan.groupby(axis=1, level=1)

@@ -42,8 +42,7 @@ class Command(BaseCommand):
     @staticmethod
     def format_date(date_string):
         date_object = datetime.strptime(date_string, '%d/%m/%Y')
-        formatted_date_string = date_object.strftime('%Y-%m-%d')
-        return formatted_date_string
+        return date_object.strftime('%Y-%m-%d')
 
     @staticmethod
     def request_page():
@@ -58,8 +57,7 @@ class Command(BaseCommand):
 # DEBUGGING FEATURES
 def format_date(date_string):
     date_object = datetime.strptime(date_string, '%d/%m/%Y')
-    formatted_date_string = date_object.strftime('%Y-%m-%d')
-    return formatted_date_string
+    return date_object.strftime('%Y-%m-%d')
 
 
 def main():

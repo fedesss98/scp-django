@@ -41,13 +41,12 @@ class Command(BaseCommand):
                 event.save()
                 self.stdout.write(self.style.SUCCESS(f'Successfully created event "{event}" from data obtained via GET request to {url}'))
         if not found:
-            self.stdout.write(self.style.WARNING(f'Requested URL not found'))
+            self.stdout.write(self.style.WARNING('Requested URL not found'))
 
     @staticmethod
     def format_date(date_string):
         date_object = datetime.strptime(date_string, '%d/%m/%Y')
-        formatted_date_string = date_object.strftime('%Y-%m-%d')
-        return formatted_date_string
+        return date_object.strftime('%Y-%m-%d')
 
     @staticmethod
     def request_page():
