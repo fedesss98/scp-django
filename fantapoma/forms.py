@@ -71,14 +71,14 @@ class UpdatePointsForm(forms.ModelForm):
             'ultimo': -1,
         }
         race_points = 0
-        actions_points = 0
         # Race points
         for position in ['golds', 'silvers', 'bronzes', 'lasts']:
             # Number of first, second, third or last positions
             n = self.cleaned_data[position] if self.cleaned_data[position] else 0
             race_points += ACTION_POINTS_DICT[position] * n
         self.instance.race_points = race_points
-        for action in self.cleaned_data['actions']:
-            actions_points += ACTION_POINTS_DICT[action]
+        actions_points = sum(
+            ACTION_POINTS_DICT[action] for action in self.cleaned_data['actions']
+        )
         self.instance.actions_points = actions_points
         return super().save(commit)

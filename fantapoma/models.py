@@ -41,13 +41,11 @@ class FantaAthlete(models.Model):
         }
         today = datetime.date.today()
         age = today.year - self.born.year
-        category = categories.get(age, 'Master')
-        return category
+        return categories.get(age, 'Master')
 
     @property
     def bookings(self):
-        n = self.players.all().count()
-        return n
+        return self.players.all().count()
 
     @property
     def adjusted_price(self):

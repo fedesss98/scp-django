@@ -109,7 +109,7 @@ class FantaAthleteView(ListView):
         increasing = self.request.GET.get('increasing', 'off')
         ordering = self.request.GET.get('order', 'name')
         if increasing != 'on':
-            ordering = '-' + ordering
+            ordering = f'-{ordering}'
         return ordering
 
     def get_context_data(self, **kwargs):
@@ -181,8 +181,7 @@ class UpdatePointsView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         # Update the context data to serve the name of the athlete selected by URL ID
         context = super().get_context_data(**kwargs)
-        athlete_id = self.kwargs.get('athlete_id')
-        if athlete_id:
+        if athlete_id := self.kwargs.get('athlete_id'):
             athlete = FantaAthlete.objects.get(id=athlete_id)
             context['athlete'] = athlete.name
         return context
@@ -190,8 +189,7 @@ class UpdatePointsView(LoginRequiredMixin, FormView):
     def get_form_kwargs(self):
         # Takes the user athlete or one athlete with ID specified in the URL 
         kwargs = super().get_form_kwargs()
-        athlete_id = self.kwargs.get('athlete_id')
-        if athlete_id:
+        if athlete_id := self.kwargs.get('athlete_id'):
             athlete = FantaAthlete.objects.get(id=athlete_id)
         else:
             athlete = self.request.user.true_athlete
