@@ -6,6 +6,9 @@ from django.db.models import Sum
 import math
 import datetime
 
+
+from events.models import Athlete  # Import the Athlete model
+
 # Create your models here.
 
 
@@ -22,7 +25,11 @@ class FantaAthlete(models.Model):
     race_points = models.IntegerField(default=0)
     actions_points = models.IntegerField(default=0)
 
-    players = models.ManyToManyField(User, blank=True)
+    # Corresponding real Athlete
+    athlete = models.OneToOneField(Athlete, blank=True, null=True, on_delete=models.CASCADE)
+    # Players who have booked this athlete
+    players = models.ManyToManyField(User, blank=True, related_name='athletes_set')
+    # Corresponding real User
     is_user = models.OneToOneField(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='true_athlete')
 
     def __str__(self):
@@ -68,7 +75,8 @@ class Player(models.Model):
     team_name = models.CharField(max_length=200, default='8+')
 
     def get_athletes(self):
-        return self.user.athlete_set.all()
+        print(self.user)
+        return self.user.athletes_set.all()
 
     @property
     def score(self):

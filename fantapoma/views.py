@@ -21,26 +21,32 @@ def index(request):
 
 
 def view_athlete(request, id):
-    athlete = FantaAthlete.objects.get(id=id)
+    fantaathlete = FantaAthlete.objects.get(id=id)
     user = request.user
-    races = athlete.race_set.all()
+    if fantaathlete.athlete is not None:
+        # All the crews of all the races in which the athlete has participated
+        crews = fantaathlete.athlete.crew_set.all() 
+        # All the races in which the athlete has participated
+        races = [crew.race for crew in crews]
+    else:
+        races = []
     buy = True
     sell = False
     # If the user has the athlete in it's eight
-    if user.athlete_set.filter(id=athlete.id).exists():
+    if user.athletes_set.filter(id=fantaathlete.id).exists():
         # Cannot buy, can sell
         buy = False
         sell = True
     # If the user doesn't have the player
     # and doesn't have franchs or doesn't have more space
     elif (user.player.franchs <= 0 
-          or user.athlete_set.count() >= 8):
+          or user.athletes_set.count() >= 8):
         # Cannot buy, cannot sell
         buy = False
         sell = False
     context = {
-        'title': f"{athlete.name} - Fantapoma",
-        'athlete': athlete,
+        'title': f"{fantaathlete.name} - Fantapoma",
+        'athlete': fantaathlete,
         'races': races,
         'buy': buy,
         'sell': sell,
@@ -49,12 +55,12 @@ def view_athlete(request, id):
     if request.method == 'POST':
         """ Prenota atleta """
         if 'acquista' in request.POST:
-            franchs = athlete.adjusted_price
+            franchs = fantaathlete.adjusted_price
             remain_franchs = user.player.franchs - franchs
             if remain_franchs >= 0:
                 print('Acquista')
-                athlete.players.add(user)
-                athlete.save()
+                fantaathlete.players.add(user)
+                fantaathlete.save()
                 user.player.franchs = remain_franchs
                 # Now user cannot buy but can sell
                 context['buy'] = False
@@ -63,9 +69,9 @@ def view_athlete(request, id):
             else:
                 messages.error(request, 'Non hai abbastanza Franchini per comprare!')
         elif 'rimuovi' in request.POST:
-            athlete.players.remove(user)
-            franchs = athlete.adjusted_price
-            athlete.save()
+            fantaathlete.players.remove(user)
+            franchs = fantaathlete.adjusted_price
+            fantaathlete.save()
             user.player.franchs = user.player.franchs + franchs
             # Now user can buy but cannot sell
             context['buy'] = True
@@ -82,12 +88,12 @@ class MyCrewView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         self.user = self.request.user
-        return self.user.athlete_set.all()
+        return self.user.athletes_set.all()
 
     def get_context_data(self, **kwargs):
         self.user = self.request.user
         context = super().get_context_data(**kwargs)
-        context['atleti'] = self.user.athlete_set.all()
+        context['atleti'] = self.user.athletes_set.all()
         return context
 
 
@@ -98,7 +104,8 @@ class FantaAthleteView(ListView):
     ordering = '-name'
 
     def get_queryset(self):
-        athlete_name = self.request.GET.get('athlete_name') 
+        athlete_name = self.request.GET.get('athlete_name')
+        print(athlete_name)
         queryset = super().get_queryset().order_by('name')
         if athlete_name is not None:
             queryset = FantaAthlete.objects.filter(name__icontains=athlete_name)
@@ -115,7 +122,7 @@ class FantaAthleteView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.user = self.request.user
-        atlethes = self.user.athlete_set.all().values_list('name', flat=True)
+        atlethes = self.user.athletes_set.all().values_list('name', flat=True)
         context['atleti'] = list(atlethes)
         context['ordering'] = self.request.GET.get('order', 'name')
         context['increasing'] = self.request.GET.get('increasing', 'off')

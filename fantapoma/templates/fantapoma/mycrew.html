@@ -37,7 +37,7 @@
               </li>
             </ul>
             <h5 class="card-text text-end m-2">{{ object.total_points }} Punti</h5>
-            <a href="{% url 'view-athlete' object.id %}" class="btn btn-primary">Vedi</a>
+            <a href="{% url 'fantapoma:view-athlete' object.id %}" class="btn btn-primary">Vedi</a>
           </div>
           <div class="card-footer text-muted">
             Prenotato da {{ object.bookings }} Giocatori.

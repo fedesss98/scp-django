@@ -106,6 +106,7 @@ class Crew(models.Model):
     athletes = models.ManyToManyField(Athlete)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
+    result = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return f"{self.race} - {self.bow_number}"

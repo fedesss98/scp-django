@@ -18,7 +18,7 @@
           <tr style="transform: rotate(0);">
             <th scope="row">{{ forloop.counter }}</th>
             <td>{{ user }}</td>
-            <td ><a href="{% url 'view-crew' user.id %}" class="stretched-link">{{ user.player.team_name }}</a></td>
+            <td ><a href="{% url 'fantapoma:view-crew' user.id %}" class="stretched-link">{{ user.player.team_name }}</a></td>
             <td>{{ user.player.score }}</td>
           </tr>
           {% endfor %}

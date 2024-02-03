@@ -14,9 +14,11 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'fantapoma:leaderboard' %}">Classifica</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'events:list-events' %}">Eventi</a>
-        </li>
+        {% comment %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'events:list-events' %}">Eventi</a>
+          </li>
+        {% endcomment %}
         {% if request.user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'fantapoma:marketplace' %}">Marketplace</a>
