@@ -7,7 +7,7 @@ import math
 import datetime
 
 
-from events.models import Athlete  # Import the Athlete model
+from events.models import Athlete, Crew  # Import the Athlete model
 
 # Create your models here.
 
@@ -15,10 +15,10 @@ from events.models import Athlete  # Import the Athlete model
 class FantaAthlete(models.Model):
     name = models.CharField(max_length=200)
     born = models.DateField('Date of Birth', default=datetime.date(2000,1,1))
-    total = models.IntegerField('Total Races', default=0)
-    first = models.IntegerField(default=0)
-    second = models.IntegerField(default=0)
-    third = models.IntegerField(default=0)
+    #total = models.IntegerField('Total Races', default=0)
+    #first = models.IntegerField(default=0)
+    #second = models.IntegerField(default=0)
+    #third = models.IntegerField(default=0)
     first_time = models.DateField('First Race Date')
     last_time = models.DateField('Last Race Date')
     price = models.IntegerField(default=0)
@@ -48,20 +48,50 @@ class FantaAthlete(models.Model):
         }
         today = datetime.date.today()
         age = today.year - self.born.year
-        category = categories.get(age, 'Master')
-        return category
+        return categories.get(age, 'Master')
 
     @property
     def bookings(self):
-        n = self.players.all().count()
-        return n
+        return self.players.all().count()
 
     @property
     def adjusted_price(self):
         booking_term = self.price*(math.tanh(self.bookings/4))
-        adjusted_points = self.price + booking_term
+        athlete_instance = self.athlete
+        crews = Crew.objects.filter(athletes=athlete_instance)
+        base_price = 5 
+        for crew in crews:
+            if crew.result == 1:
+                base_price += 25
+            elif crew.result == 2:
+                base_price += 15
+            elif crew.result == 3:
+                base_price += 10
+            else:
+                base_price += 3
+        adjusted_points = base_price + booking_term
         return int(adjusted_points)
+    
+    @property
+    def total(self):
+        crew_set = self.athlete.filter(athletes=self.athlete)
+        return crew_set.count()
 
+    @property
+    def first(self):
+        crew_set = self.athlete.filter(athletes=self.athlete)
+        return sum(crew.result == 1 for crew in crew_set)
+    
+    @property
+    def second(self):
+        crew_set = self.athlete.filter(athletes=self.athlete)
+        return sum(crew.result == 2 for crew in crew_set)
+    
+    @property
+    def third(self):
+        crew_set = self.athlete.filter(athletes=self.athlete)
+        return sum(crew.result == 3 for crew in crew_set)
+    
     @property
     def total_points(self):
         return self.race_points + self.actions_points
