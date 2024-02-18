@@ -30,9 +30,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         requested_url = options['url']
-        self.event = Event.objects.get(url=requested_url)
-        if self.event is None:
-            raise Exception("Event not found")
+        try:
+            self.event = Event.objects.get(url=requested_url)
+        except Event.DoesNotExist:
+            self.stdout.write(self.style.WARNING("Event not found"))
+            return None
         soup = self.request_page(requested_url)
         table = self.find_race_table(soup)
         if table is None:

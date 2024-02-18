@@ -27,7 +27,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         soup = self.request_page()
         table = soup.find('div', class_='box').find()
+        #print(table)
+        print(len(table.find_all('tr')))
         for row in table.find_all('tr'):
+            print(row)
             if options['url'] is not None:
                 links = [BASE_URL + link.get('href') for link in row.find_all('a')]
                 if options['url'] in links:
@@ -41,12 +44,11 @@ class Command(BaseCommand):
     @staticmethod
     def format_date(date_string):
         date_object = datetime.strptime(date_string, '%d/%m/%Y')
-        formatted_date_string = date_object.strftime('%Y-%m-%d')
-        return formatted_date_string
+        return date_object.strftime('%Y-%m-%d')
 
     @staticmethod
     def request_page():
-        url = 'https://canottaggioservice.canottaggio.net/scrivi_cook.php?ritorno=menu_regionali.php?reg=13&amp;&amp;sta_ag=2023'
+        url = 'https://canottaggioservice.canottaggio.net/scrivi_cook.php?ritorno=menu_regionali.php?reg=13&&;sta_ag=2023'
         headers = {
             "User-Agent": "fantapoma"
         }
@@ -82,8 +84,7 @@ class Command(BaseCommand):
 # DEBUGGING FEATURES
 def format_date(date_string):
     date_object = datetime.strptime(date_string, '%d/%m/%Y')
-    formatted_date_string = date_object.strftime('%Y-%m-%d')
-    return formatted_date_string
+    return date_object.strftime('%Y-%m-%d')
 
 
 def main():

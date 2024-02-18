@@ -262,3 +262,6 @@ fabric.properties
 
 # CSV files to manage the database
 *.csv
+
+# Notebooks
+*.ipynb
