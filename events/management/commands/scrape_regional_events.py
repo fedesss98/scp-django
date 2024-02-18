@@ -27,10 +27,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         soup = self.request_page()
         table = soup.find('div', class_='box').find()
-        #print(table)
-        print(len(table.find_all('tr')))
         for row in table.find_all('tr'):
-            print(row)
             if options['url'] is not None:
                 links = [BASE_URL + link.get('href') for link in row.find_all('a')]
                 if options['url'] in links:
@@ -48,7 +45,7 @@ class Command(BaseCommand):
 
     @staticmethod
     def request_page():
-        url = 'https://canottaggioservice.canottaggio.net/scrivi_cook.php?ritorno=menu_regionali.php?reg=13&&;sta_ag=2023'
+        url = 'https://canottaggioservice.canottaggio.net/scrivi_cook.php?ritorno=menu_regionali.php?reg=13&&;sta_ag=2024'
         headers = {
             "User-Agent": "fantapoma"
         }
