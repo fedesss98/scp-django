@@ -3,13 +3,17 @@ from django.forms import ModelForm, TextInput, PasswordInput, EmailInput
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from fantapoma.models import Player
+from fantapoma.models import Player, FantaAthlete
 
 class PlayerCreationForm(UserCreationForm):
     team_name = forms.CharField(
         max_length=200, 
         required=True,
         label='Il tuo 8+',)
+    fanta_athlete = forms.ModelChoiceField(
+        queryset=FantaAthlete.objects.filter(player__isnull=True),
+        label="Seleziona l'Atleta che ti rappresenta",
+        required=False,)
 
     def __init__(self, *args, **kwargs):
         super(PlayerCreationForm, self).__init__(*args, **kwargs)
@@ -35,7 +39,7 @@ class PlayerCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'team_name', 'password1', 'password2')
+        fields = ('username', 'email', 'team_name', 'fanta_athlete', 'password1', 'password2')
 
         labels = {
             'username': 'Username',
@@ -48,5 +52,12 @@ class PlayerCreationForm(UserCreationForm):
         user = super(PlayerCreationForm, self).save()
         team_name = self.cleaned_data['team_name']
         player = Player.objects.create(user=user, team_name=team_name)
+        fanta_athlete = self.cleaned_data['fanta_athlete']
+        if fanta_athlete is not None:
+            fanta_athlete.is_user = player
+            fanta_athlete.save()
+        else:
+            print("No Fanta Athlete selected. Contact the webmaster.")
+        return user
 
 
