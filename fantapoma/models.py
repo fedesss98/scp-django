@@ -74,21 +74,25 @@ class FantaAthlete(models.Model):
     
     @property
     def total(self):
+        """Total of medals won by the Athlete"""
         crew_set = self.athlete.filter(athletes=self.athlete)
         return crew_set.count()
 
     @property
     def first(self):
+        """Total of gold medals won by the Athlete"""
         crew_set = self.athlete.filter(athletes=self.athlete)
         return sum(crew.result == 1 for crew in crew_set)
     
     @property
     def second(self):
+        """Total of silver medals won by the Athlete"""
         crew_set = self.athlete.filter(athletes=self.athlete)
         return sum(crew.result == 2 for crew in crew_set)
     
     @property
     def third(self):
+        """Total of bronze medals won by the Athlete"""
         crew_set = self.athlete.filter(athletes=self.athlete)
         return sum(crew.result == 3 for crew in crew_set)
     
