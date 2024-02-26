@@ -11,7 +11,7 @@ class PlayerCreationForm(UserCreationForm):
         required=True,
         label='Il tuo 8+',)
     fanta_athlete = forms.ModelChoiceField(
-        queryset=FantaAthlete.objects.filter(player__isnull=True),
+        queryset=FantaAthlete.objects.filter(athlete__isnull=True),
         label="Seleziona l'Atleta che ti rappresenta",
         required=False,)
 
