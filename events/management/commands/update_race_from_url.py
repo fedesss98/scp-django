@@ -139,30 +139,46 @@ class Command(BaseCommand):
         athlete = athlete.replace("-Tim.", "").strip()
         return athlete.title()
 
-    def get_athletes(self, soc):
+    def get_athletes(self, crew):
         athletes = []
-        for at in soc.next_sibling.stripped_strings:
-            if at.strip(' .') != '' and '(' not in at:
+        for at in crew.stripped_strings:
+            if at.strip(' .') != '' and '(' not in at and '**' not in at:
                 athlete = self.normalize_athletes_names(at)
-                athlete_object, created = Athlete.objects.get_or_create(name=athlete)
+                try:
+                    athlete_object = Athlete.objects.get(name=athlete)
+                except Athlete.DoesNotExist:
+                    self.stderr.write(f"Athlete {athlete} not found in the database")
+                    return []
                 print(athlete)
                 athletes.append(athlete_object)
+        print(athletes)
         return athletes
 
-    def update_crew(self, soc, race):
-        race_result = int(soc.parent.b.string.strip())
-        soc_name = soc.string.split('(')[0]
-        athletes = self.get_athletes(soc)
-        # Get the Crew model instance
-        crew_instance = Crew.objects.get(athletes__in=athletes, race=race)
-        crew_instance.result = race_result
+    def update_crew(self, result, race):
+        if len(result.find_all('font')) == 0:
+            # This is a void table element without crews
+            return None
+        # Extract infos from the table data
+        position, time, _, crew = result.find_all('font', recursive=False)
+        athletes = self.get_athletes(crew)
+        # Filter out the Crew model instance
+        crew_instance = Crew.objects.filter(race=race, athletes__in=athletes).distinct()
+        if not crew_instance.exists():
+            self.stderr.write(self.style.ERROR(f"Crew with athletes {athletes} not found in the database"))
+            return None
+        elif crew_instance.count() > 1:
+            self.stderr.write(self.style.ERROR(f"Multiple Crews found with athletes {athletes}"))
+            return None
+        else:
+            crew_instance = crew_instance.first()
+        crew_instance.result = position.text.strip()
         crew_instance.save()
-        self.stdout.write(self.style.SUCCESS(f'Successfully updated crew "{crew_instance}" with result {race_result}'))
+        self.stdout.write(self.style.SUCCESS(f'Successfully updated crew "{crew_instance}" with result {position.text.strip()}'))
         return None
 
-    def make_crews_results(self, table_socs, race):
-        for soc in table_socs:
-            self.update_crew(soc, race)
+    def make_crews_results(self, results, race):
+        for result in results.find_all('td'):
+            self.update_crew(result, race)
         return None
 
     def scrape_race_results(self, soup):
@@ -170,12 +186,6 @@ class Command(BaseCommand):
         for div in divs:
             race_infos, results = div.find_all('table')[-2:]
             race = self.find_race(race_infos)
-            # We are only interested in tables where there are club's names
-            # table_socs = table.find_all("font", {"b": {"i": True}})
-            # if len(table_socs) > 0:
-            #     print(table)
-            #     # That's a race table and there are entries
-            #     race = self.find_race(table)
-            #     if race is not None:
-            #         self.make_crews_results(table_socs, race)
+            if race is not None:
+                self.make_crews_results(results, race)
         return None
