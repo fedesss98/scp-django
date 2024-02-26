@@ -64,7 +64,7 @@ class Event(models.Model):
     type = models.CharField(max_length=80, choices=EVENT_TYPES, default='REG')
 
     def __str__(self):
-        return self.name
+        return f"{self.name} {self.location} ({self.date})"
 
 
 class Race(models.Model):

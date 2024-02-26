@@ -72,28 +72,33 @@ class FantaAthlete(models.Model):
         adjusted_points = base_price + booking_term
         return int(adjusted_points)
     
+    def get_crew_set(self, date=None):
+        if date is None:
+            date = datetime.datetime.now().year
+        return self.athlete.crew_set.filter(race__event__date__year__gte=date)
+    
     @property
     def total(self):
         """Total of medals won by the Athlete"""
-        crew_set = self.athlete.filter(athletes=self.athlete)
+        crew_set = self.get_crew_set()
         return crew_set.count()
 
     @property
     def first(self):
         """Total of gold medals won by the Athlete"""
-        crew_set = self.athlete.filter(athletes=self.athlete)
+        crew_set = self.get_crew_set()
         return sum(crew.result == 1 for crew in crew_set)
     
     @property
     def second(self):
         """Total of silver medals won by the Athlete"""
-        crew_set = self.athlete.filter(athletes=self.athlete)
+        crew_set = self.get_crew_set()
         return sum(crew.result == 2 for crew in crew_set)
     
     @property
     def third(self):
         """Total of bronze medals won by the Athlete"""
-        crew_set = self.athlete.filter(athletes=self.athlete)
+        crew_set = self.get_crew_set()
         return sum(crew.result == 3 for crew in crew_set)
     
     @property
