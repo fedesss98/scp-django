@@ -21,6 +21,7 @@ class FantaAthlete(models.Model):
     #third = models.IntegerField(default=0)
     first_time = models.DateField('First Race Date')
     last_time = models.DateField('Last Race Date')
+    release_date = models.DateField('Release Date', default=datetime.date(2024,1,1))
     price = models.IntegerField(default=0)
     race_points = models.IntegerField(default=0)
     actions_points = models.IntegerField(default=0)
