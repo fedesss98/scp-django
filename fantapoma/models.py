@@ -81,26 +81,38 @@ class FantaAthlete(models.Model):
     @property
     def total(self):
         """Total of medals won by the Athlete"""
-        crew_set = self.get_crew_set()
-        return crew_set.count()
+        try:
+            crew_set = self.get_crew_set()
+            return crew_set.count()
+        except AttributeError:
+            return 0
 
     @property
     def first(self):
         """Total of gold medals won by the Athlete"""
-        crew_set = self.get_crew_set()
-        return sum(crew.result == 1 for crew in crew_set)
+        try:
+            crew_set = self.get_crew_set()
+            return sum(crew.result == 1 for crew in crew_set)
+        except AttributeError:
+            return 0
     
     @property
     def second(self):
         """Total of silver medals won by the Athlete"""
-        crew_set = self.get_crew_set()
-        return sum(crew.result == 2 for crew in crew_set)
+        try:
+            crew_set = self.get_crew_set()
+            return sum(crew.result == 2 for crew in crew_set)
+        except AttributeError:
+            return 0
     
     @property
     def third(self):
         """Total of bronze medals won by the Athlete"""
-        crew_set = self.get_crew_set()
-        return sum(crew.result == 3 for crew in crew_set)
+        try:
+            crew_set = self.get_crew_set()
+            return sum(crew.result == 3 for crew in crew_set)
+        except AttributeError:
+            return 0
     
     @property
     def total_points(self):
