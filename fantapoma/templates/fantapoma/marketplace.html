@@ -15,6 +15,26 @@
 {% endfor %}
 {% endif %}
 
+<style>
+@media (max-width: 992px) {
+
+  .col-sm-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding: 0 2rem;
+  }
+}
+
+@media (max-width: 450px) {
+
+  .col-sm-4 {
+    padding: 0;
+  }
+}
+
+  
+</style>
+
 <div class="container header text-center mt-5">
   <h1>MARKETPLACE</h1>
   <h2>Prenota i tuoi Atleti</h2>
@@ -108,5 +128,3 @@
 </div>
   
 {% endblock %}
-
-#<!---->
