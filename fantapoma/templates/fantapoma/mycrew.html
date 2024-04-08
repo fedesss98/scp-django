@@ -7,6 +7,16 @@
   <h2>{{ request.user.player.team_name }}</h2>
   <h3 class="text-muted fw-light fs-4">{{ request.user.username }}</h3>
 </div>
+{% if request.user.player.cox is not None %}
+  <div class="container mt-3 border-top border-bottom">
+    <h3 class="pt-3">Timoniere:</h3>
+    <p>{{request.user.player.cox}}</p>
+  </div>
+{% else %}
+  <div class="container mt-3 border-top border-bottom">
+    <p class="pt-3"><em>Seleziona un Timoniere dalla tua pagina del Profilo!</em></p>
+  </div>
+{% endif %}
 <div class="container card-container mt-2">
   <div class="container-fluid object">
     <div class="row">
@@ -48,5 +58,26 @@
     </div>
   </div>
 </div>
+
+
+<style>
+  @media (max-width: 992px) {
   
+    .col-sm-4 {
+      flex: 0 0 100%;
+      max-width: 100%;
+      padding: 0 2rem;
+    }
+  }
+  
+  @media (max-width: 450px) {
+  
+    .col-sm-4 {
+      padding: 0;
+    }
+  }
+  
+    
+  </style>
+
 {% endblock %}

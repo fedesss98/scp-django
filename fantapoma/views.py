@@ -1,5 +1,6 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from django.views.generic.edit import FormView
 from django.db.models import F
@@ -97,6 +98,7 @@ class MyCrewView(LoginRequiredMixin, ListView):
         return context
 
 
+
 # MARKETPLACE
 class FantaAthleteView(ListView):
     template_name = "fantapoma/marketplace.html"
@@ -116,7 +118,7 @@ class FantaAthleteView(ListView):
         increasing = self.request.GET.get('increasing', 'off')
         ordering = self.request.GET.get('order', 'name')
         if increasing != 'on':
-            ordering = '-' + ordering
+            ordering = f'-{ordering}'
         return ordering
 
     def get_context_data(self, **kwargs):
@@ -188,8 +190,7 @@ class UpdatePointsView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         # Update the context data to serve the name of the athlete selected by URL ID
         context = super().get_context_data(**kwargs)
-        athlete_id = self.kwargs.get('athlete_id')
-        if athlete_id:
+        if athlete_id := self.kwargs.get('athlete_id'):
             athlete = FantaAthlete.objects.get(id=athlete_id)
             context['athlete'] = athlete.name
         return context
@@ -197,8 +198,7 @@ class UpdatePointsView(LoginRequiredMixin, FormView):
     def get_form_kwargs(self):
         # Takes the user athlete or one athlete with ID specified in the URL 
         kwargs = super().get_form_kwargs()
-        athlete_id = self.kwargs.get('athlete_id')
-        if athlete_id:
+        if athlete_id := self.kwargs.get('athlete_id'):
             athlete = FantaAthlete.objects.get(id=athlete_id)
         else:
             athlete = self.request.user.true_athlete

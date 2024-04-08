@@ -125,6 +125,7 @@ class Player(models.Model):
     last_name = models.TextField('cognome', max_length=100, blank=True, null=True)
     franchs = models.IntegerField(blank=True, default=450)
     team_name = models.CharField(max_length=200, default='8+')
+    cox = models.ForeignKey(FantaAthlete, blank=True, null=True, on_delete=models.SET_NULL, related_name='cox')
 
     def get_athletes(self):
         print(self.user)
