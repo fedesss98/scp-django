@@ -1,7 +1,7 @@
 from django.urls import path, include
 
 from . import views
-from fantapoma.views import MyCrewView, FantaAthleteView, LeaderboardView, ViewCrew, CreateSpecialView, ListSpecialsView, UpdatePointsView, RawFantaAthleteListView, EventsView, StatisticsView
+from fantapoma.views import MyCrewView, FantaAthleteView, LeaderboardView, ViewCrew, CreateSpecialView, ListSpecialsView, UpdatePointsView, RawFantaAthleteListView, EventsView, StatisticsView, GivePointsView
 
 app_name = 'fantapoma'
 
@@ -19,4 +19,5 @@ urlpatterns = [
         path('submit-points/<int:athlete_id>/', UpdatePointsView.as_view(), name='submit-points'),
         path('submit-points/', UpdatePointsView.as_view(), name='submit-points'),
         path('athletes/', RawFantaAthleteListView.as_view(), name='athlete-list'),
+        path('give-points/', GivePointsView.as_view(), name='give-points'),
     ]

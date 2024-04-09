@@ -1,13 +1,14 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from django.views.generic.edit import FormView
 from django.db.models import F
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from fantapoma.models import FantaAthlete, Special
+from fantapoma.models import FantaAthlete, Special, Player
 from django.contrib.auth.models import User
 from .forms import UpdatePointsForm
 
@@ -130,6 +131,8 @@ class FantaAthleteView(ListView):
         context['increasing'] = self.request.GET.get('increasing', 'off')
         return context
 
+
+# CLASSIFICA
 class LeaderboardView(ListView):
     model = User
     template_name = 'fantapoma/leaderboard.html'
@@ -139,6 +142,7 @@ class LeaderboardView(ListView):
         return sorted(queryset, key=lambda u: u.player.score, reverse=True)
 
     context_object_name = 'users'
+
 
 class ViewCrew(DetailView):
     model = User
@@ -210,7 +214,8 @@ class UpdatePointsView(LoginRequiredMixin, FormView):
         # form.instance = self.request.user.athlete
         form.save()
         return super().form_valid(form)
-    
+
+
 class EventsView(TemplateView):
     template_name = 'fantapoma/../events/templates/events/events.html'
 
@@ -232,3 +237,22 @@ class StatisticsView(TemplateView):
         context['top_race_athletes'] = top_race_athletes
         context['top_actions_athletes'] = top_actions_athletes
         return context
+
+
+class GivePointsView(UserPassesTestMixin, View):
+    template_name = 'fantapoma/give_points.html'
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def get(self, request, *args, **kwargs):
+        players = Player.objects.select_related('user').all()
+        print(players)
+        return render(request, self.template_name, {'players': players})
+
+    def post(self, request, *args, **kwargs):
+        usernames = request.POST.getlist('users')
+        franchs = int(request.POST.get('franchs')) if request.POST.get('franchs') else 0
+        Player.objects.filter(user__username__in=usernames).update(franchs=F('franchs') + franchs)
+        players = Player.objects.select_related('user').all()
+        return render(request, self.template_name, {'players': players})

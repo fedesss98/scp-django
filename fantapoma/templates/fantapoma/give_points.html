@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Distribuisci Franchini{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        <label for="franchs">Franchini:</label>
+        <input type="number" id="franchs" name="franchs">
+        <br>
+        <input type="checkbox" id="select-all" onclick="selectAll()">
+        <label for="select-all">Select All</label>
+        <br>
+        {% for player in players %}
+            <input type="checkbox" class="player-checkbox" id="player{{ player.user.username }}" name="users" value="{{ player.user.username }}">
+            <label for="player{{ player.user.username }}">{{ player.user.username }}</label>
+            <br>
+        {% endfor %}
+        <input type="submit" value="Update">
+    </form>
+</div>
+
+<script>
+    function selectAll() {
+        var selectAllCheckbox = document.getElementById('select-all');
+        var playerCheckboxes = document.getElementsByClassName('player-checkbox');
+        for (var i = 0; i < playerCheckboxes.length; i++) {
+            playerCheckboxes[i].checked = selectAllCheckbox.checked;
+        }
+    }
+    </script>
+
+{% endblock %}
