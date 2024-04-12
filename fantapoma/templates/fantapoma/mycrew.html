@@ -58,6 +58,30 @@
     </div>
   </div>
 </div>
+<div class="container card-container mt-5">
+  <h3 class="text-center">I tuoi Special</h3>
+  <div class="container-fluid object">
+    <div class="row">
+    {% for object in specials %}
+      <div class="col-sm-4 my-3">
+        <div class="card shadow">
+          <div class="card-header">
+            <h5>{{object.name}}</h5>
+          </div>
+          <div class="card-body">
+            <p class="card-text">{{ object.special }}</p>
+            <h5 class="card-text text-end m-2">{{object.price}} Franchini</h5>
+            <a href="{% url 'fantapoma:sell_special' object.id %}" class="btn btn-danger">Rimuovi</a>
+          </div>
+          <div class="card-footer text-muted">
+            Special di tipo {{ object.tipo }}.
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+  </div>
+</div>
 
 
 <style>

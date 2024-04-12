@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Specials{% endblock title %}
+
+{% block content %} 
+<div class="container">
+    <h2>Create new Special</h2>
+    <div class="container form-container mt-5">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary p-3">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}

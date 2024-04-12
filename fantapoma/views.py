@@ -9,8 +9,9 @@ from django.db.models import F
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from fantapoma.models import FantaAthlete, Special, Player
+from events.models import Crew, Athlete, Race, Event
 from django.contrib.auth.models import User
-from .forms import UpdatePointsForm
+from .forms import UpdatePointsForm, SpecialForm
 
 from django.contrib import messages
 
@@ -27,11 +28,9 @@ def view_athlete(request, id):
     user = request.user
     if fantaathlete.athlete is not None:
         # All the crews of all the races in which the athlete has participated
-        crews = fantaathlete.athlete.crew_set.all() 
-        # All the races in which the athlete has participated
-        races = [crew.race for crew in crews]
+        crews = fantaathlete.athlete.crew_set.filter(race__event__date__year=2024) 
     else:
-        races = []
+        crews = Crew.objects.none()
     buy = True
     sell = False
     # If the user has the athlete in it's eight
@@ -49,7 +48,7 @@ def view_athlete(request, id):
     context = {
         'title': f"{fantaathlete.name} - Fantapoma",
         'athlete': fantaathlete,
-        'races': races,
+        'crews': crews,
         'buy': buy,
         'sell': sell,
     }
@@ -86,8 +85,6 @@ class MyCrewView(LoginRequiredMixin, ListView):
     model = FantaAthlete
     template_name = "fantapoma/mycrew.html"
 
-    context_object_name = 'player'
-
     def get_queryset(self):
         self.user = self.request.user
         return self.user.athletes_set.all()
@@ -96,6 +93,7 @@ class MyCrewView(LoginRequiredMixin, ListView):
         self.user = self.request.user
         context = super().get_context_data(**kwargs)
         context['atleti'] = self.user.athletes_set.all()
+        context['specials'] = self.user.specials_set.all()
         return context
 
 
@@ -108,11 +106,9 @@ class FantaAthleteView(ListView):
 
     def get_queryset(self):
         athlete_name = self.request.GET.get('athlete_name')
-        print(athlete_name)
         queryset = super().get_queryset().order_by('name')
         if athlete_name is not None:
             queryset = FantaAthlete.objects.filter(name__icontains=athlete_name)
-        print(queryset)
         return queryset
     
     def get_ordering(self):
@@ -166,13 +162,10 @@ class ViewCrew(DetailView):
         context['athletes'] = FantaAthlete.objects.filter(players__pk=pk)
         return context
 
-    
-class CreateSpecialView(CreateView):
-    model = Special
-    fields = '__all__'
 
 
 class ListSpecialsView(ListView):
+    template_name = "fantapoma/special_market.html"
     model = Special
 
 
@@ -256,3 +249,46 @@ class GivePointsView(UserPassesTestMixin, View):
         Player.objects.filter(user__username__in=usernames).update(franchs=F('franchs') + franchs)
         players = Player.objects.select_related('user').all()
         return render(request, self.template_name, {'players': players})
+
+
+class CreateSpecialView(UserPassesTestMixin, CreateView):
+    model = Special
+    form_class = SpecialForm
+    template_name = 'fantapoma/create_special.html'
+    success_url = reverse_lazy('fantapoma:create-special')
+
+    def test_func(self):
+        return self.request.user.is_staff
+    
+
+class BuySpecialView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        special = get_object_or_404(Special, id=kwargs['special_id'])
+        franchs = special.price
+        remain_franchs = request.user.player.franchs - franchs
+        if special.players.filter(id=request.user.id).exists():
+            messages.error(request, 'Hai già acquistato questo Special!')   
+        elif remain_franchs < 0:
+            messages.error(request, 'Non hai abbastanza Franchini per comprare!')
+        else:
+            special.players.add(request.user)
+            special.save()
+            request.user.player.franchs = remain_franchs
+            request.user.player.save()
+            messages.success(request, 'Acquistato!')
+        return redirect('fantapoma:special-market')
+    
+
+class SellSpecialView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        special = get_object_or_404(Special, id=kwargs['special_id'])
+        franchs = special.price
+        if special.players.filter(id=request.user.id).exists():
+            special.players.remove(request.user)  # Remove the Special instance from the user
+            special.save()
+            request.user.player.franchs += franchs
+            request.user.player.save()
+            messages.success(request, f'Hai venduto il tuo {special.name}!')
+        else:
+            messages.error(request, f'Non hai nessun {special.name} da vendere!') 
+        return redirect('fantapoma:special-market')
