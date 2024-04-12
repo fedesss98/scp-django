@@ -16,6 +16,9 @@ from .forms import UpdatePointsForm, SpecialForm
 from django.contrib import messages
 
 
+MAX_ATHLETES = 9
+
+
 def index(request):
     # return HttpResponse("Fantapoma")
     return render(request, 'fantapoma/index.html', {
@@ -33,6 +36,7 @@ def view_athlete(request, id):
         crews = Crew.objects.none()
     buy = True
     sell = False
+    
     # If the user has the athlete in it's eight
     if user.athletes_set.filter(id=fantaathlete.id).exists():
         # Cannot buy, can sell
@@ -41,7 +45,7 @@ def view_athlete(request, id):
     # If the user doesn't have the player
     # and doesn't have franchs or doesn't have more space
     elif (user.player.franchs <= 0 
-          or user.athletes_set.count() >= 8):
+          or user.athletes_set.count() >= MAX_ATHLETES):
         # Cannot buy, cannot sell
         buy = False
         sell = False
