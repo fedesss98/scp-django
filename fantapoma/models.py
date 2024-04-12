@@ -157,9 +157,14 @@ class Special(models.Model):
     name = models.CharField(max_length=200)
     special_class = models.CharField(max_length=50, choices=SPECIAL_CLASSES, default='oggetto')
     special = models.TextField(null=True, blank=True)
-    points = models.IntegerField(default=0)
+    price = models.IntegerField(default=0)
 
-    player = models.ManyToManyField(User)
+    # Players who have booked this athlete
+    players = models.ManyToManyField(User, blank=True, related_name='specials_set')
+
+    @property
+    def tipo(self):
+        return str(dict(self.SPECIAL_CLASSES)[self.special_class]).capitalize()
 
     def __str__(self):
         return f'{self.special_class}: {self.name}'
