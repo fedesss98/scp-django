@@ -58,18 +58,19 @@ class FantaAthlete(models.Model):
     @property
     def adjusted_price(self):
         booking_term = self.price*(math.tanh(self.bookings/4))
-        athlete_instance = self.athlete
-        crews = Crew.objects.filter(athletes=athlete_instance)
-        base_price = 5 
-        for crew in crews:
-            if crew.result == 1:
-                base_price += 25
-            elif crew.result == 2:
-                base_price += 15
-            elif crew.result == 3:
-                base_price += 10
-            else:
-                base_price += 3
+        base_price = 5
+        if self.athlete is not None:
+            athlete_instance = self.athlete
+            crews = self.athlete.crew_set.filter(race__event__date__year=2024)
+            for crew in crews:
+                if crew.result == 1:
+                    base_price += 25
+                elif crew.result == 2:
+                    base_price += 15
+                elif crew.result == 3:
+                    base_price += 10
+                else:
+                    base_price += 3
         adjusted_points = base_price + booking_term
         return int(adjusted_points)
     
