@@ -7,7 +7,7 @@ import math
 import datetime
 
 
-from events.models import Athlete, Crew  # Import the Athlete model
+from events.models import Athlete, Crew, Event  # Import the Athlete model
 
 # Create your models here.
 
@@ -134,10 +134,10 @@ class Player(models.Model):
     @property
     def score(self):
         athletes = self.get_athletes()
-        score = sum(athlete.total_points for athlete in athletes)
+        score = sum(athlete.adjusted_price for athlete in athletes)
         # Add two times the scores of the Player's Athlete
-        if hasattr(self.user, 'true_athlete'):
-            score += 2*self.user.true_athlete.actions_points
+        # if hasattr(self.user, 'true_athlete'):
+        #     score += 2*self.user.true_athlete.actions_points
         score = score if score is not None else 0
         return score
 
@@ -168,3 +168,32 @@ class Special(models.Model):
 
     def __str__(self):
         return f'{self.special_class}: {self.name}'
+    
+
+class FantaAthleteEventScore(models.Model):
+    athlete = models.ForeignKey(FantaAthlete, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    ficarra_video = models.BooleanField(default=False, verbose_name='Video "A CANNONE" con Ficarra')
+    offered_food = models.BooleanField(default=False, verbose_name='Offrire cibo')
+    photo_jumping = models.BooleanField(default=False, verbose_name='Foto con salto in premiazione')
+    selfie_coach = models.BooleanField(default=False, verbose_name='Selfie con un allenatore di Secondo Livello o superiore')
+    drink_to_coach = models.BooleanField(default=False, verbose_name='Offrire da bere ad un allenatore di Primo Livello o superiore')
+    selfie_franchina = models.BooleanField(default=False, verbose_name='Selfie con Bruno Franchina')
+    highfive_ficarra = models.BooleanField(default=False, verbose_name='Batticinque a Ficarra')
+    vittoria_video = models.BooleanField(default=False, verbose_name='Video "VITTORIA PER LA CANOTTIERI PALERMO" con Vito Scarpello')
+    shaking_hands = models.BooleanField(default=False, verbose_name='Foto con stretta di mano a un avversario di un altro club')
+    selfie_miele = models.BooleanField(default=False, verbose_name='Selfie con Miele')
+    anger_beni = models.BooleanField(default=False, verbose_name='Far arrabbiare Beni')
+    stop_before_end = models.BooleanField(default=False, verbose_name='Fermarsi prima del traguardo')
+    coming_late = models.BooleanField(default=False, verbose_name='Arrivare in ritardo')
+    fall_in_water = models.BooleanField(default=False, verbose_name='Cadere in acqua')
+    fight_adversary = models.BooleanField(default=False, verbose_name='Litigare con un avversario')
+    not_throwing_garbage = models.BooleanField(default=False, verbose_name='Non gettare la spazzatura')
+    out_of_buoys = models.BooleanField(default=False, verbose_name='Tagliare il traguardo fuori dalle boe')
+    bad_name_pronunciation = models.BooleanField(default=False, verbose_name='Nome pronunciato male dal giudice di partenza')
+    last_to_go = models.BooleanField(default=False, verbose_name='Ultimo a gareggiare')
+
+    class Meta:
+        unique_together = ('athlete', 'event')
+
+    

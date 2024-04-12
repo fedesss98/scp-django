@@ -8,10 +8,10 @@ from django.db.models import F
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from fantapoma.models import FantaAthlete, Special, Player
+from fantapoma.models import FantaAthlete, Special, Player, FantaAthleteEventScore
 from events.models import Crew, Athlete, Race, Event
 from django.contrib.auth.models import User
-from .forms import UpdatePointsForm, SpecialForm
+from .forms import UpdatePointsForm, SpecialForm, FantaAthleteEventScoreForm
 
 from django.contrib import messages
 
@@ -106,7 +106,7 @@ class MyCrewView(LoginRequiredMixin, ListView):
 class FantaAthleteView(ListView):
     template_name = "fantapoma/marketplace.html"
     model = FantaAthlete
-    ordering = '-name'
+    ordering = 'name'
 
     def get_queryset(self):
         athlete_name = self.request.GET.get('athlete_name')
@@ -296,3 +296,12 @@ class SellSpecialView(LoginRequiredMixin, View):
         else:
             messages.error(request, f'Non hai nessun {special.name} da vendere!') 
         return redirect('fantapoma:special-market')
+    
+
+class FantaAthleteEventScoreCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = FantaAthleteEventScore
+    form_class = FantaAthleteEventScoreForm
+    template_name = 'fantapoma/set_score.html'
+
+    def test_func(self):
+        return self.request.user.is_staff

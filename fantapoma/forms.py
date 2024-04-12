@@ -1,5 +1,5 @@
 from django import forms
-from .models import FantaAthlete, Special
+from .models import FantaAthlete, Special, FantaAthleteEventScore
 
 class UpdatePointsForm(forms.ModelForm):
     SPECIAL_ACTIONS = (
@@ -88,3 +88,9 @@ class SpecialForm(forms.ModelForm):
     class Meta:
         model = Special
         fields = ['name', 'special_class', 'special', 'price']
+
+
+class FantaAthleteEventScoreForm(forms.ModelForm):
+    class Meta:
+        model = FantaAthleteEventScore
+        fields = '__all__'
