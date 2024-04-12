@@ -11,7 +11,7 @@ urlpatterns = [
         path('marketplace/', FantaAthleteView.as_view(), name='marketplace'),
         path('view_athlete/<int:id>', views.view_athlete, name='view-athlete'),
         path('leaderboard', LeaderboardView.as_view(), name='leaderboard'),
-        path('statistics/', StatisticsView.as_view(), name='statistics'),
+        # path('statistics/', StatisticsView.as_view(), name='statistics'),
         path('view_crew/<str:pk>/', ViewCrew.as_view(), name='view-crew'),
         path('view_crew/', ViewCrew.as_view(), name='view-crew'),
         # Specials

@@ -23,7 +23,7 @@
   <h3 class="text-muted fw-light fs-4">{{ athlete.club }}</h3>
   <h3 class="fw-light fs-4">{{ athlete.adjusted_price }} Franchini</h3>
   <p class="lead">
-    A Poma ha disputato {{ athlete.total }} gare dal {{ athlete.first_time }} al {{ athlete.last_time }} 
+    A Poma ha disputato {{ athlete.total }} gare nel 2024,
     vincendo: 
     <strong>{{ athlete.first }}</strong> Ori - <strong>{{ athlete.second }}</strong> Argenti - <strong>{{ athlete.third }}</strong> Bronzi
   </p>
@@ -51,21 +51,19 @@
         <th scope="col">Data</th>
         <th scope="col">Evento</th>
         <th scope="col">Posizione</th>
-        <th scope="col">Tempo</th>
         <th scope="col">Barca</th>
         <th scope="col">Categoria</th>
       </tr>
     </thead>
     <tbody>
-      {% for race in races %}
+      {% for crew in crews %}
       <tr>
         <th scope="row">{{ forloop.counter }}</th>
-        <td>{{ race.date }}</td>
-        <td>{{ race.event.title }}</td>
-        <td>{{ race.result }}</td>
-        <td>{{ race.time }}</td>
-        <td>{{ race.boat }}</td>
-        <td>{{ race.cat }}</td>
+        <td>{{ crew.race.event.date }}</td>
+        <td>{{ crew.race.event.name }}</td>
+        <td>{{ crew.result }}</td>
+        <td>{{ crew.race.boat_type }}</td>
+        <td>{{ crew.race.category }}</td>
       </tr>
       {% endfor %}
     </tbody>
