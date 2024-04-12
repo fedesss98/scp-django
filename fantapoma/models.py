@@ -60,7 +60,6 @@ class FantaAthlete(models.Model):
         booking_term = self.price*(math.tanh(self.bookings/4))
         base_price = 5
         if self.athlete is not None:
-            athlete_instance = self.athlete
             crews = self.athlete.crew_set.filter(race__event__date__year=2024)
             for crew in crews:
                 if crew.result == 1:
@@ -71,8 +70,8 @@ class FantaAthlete(models.Model):
                     base_price += 10
                 else:
                     base_price += 3
-        adjusted_points = base_price + booking_term
-        return int(adjusted_points)
+        booking_term = base_price*math.tanh(self.bookings/4)
+        return int(base_price + booking_term)
     
     def get_crew_set(self, date=None):
         if date is None:

@@ -53,4 +53,4 @@ class UpdateProfile(LoginRequiredMixin, UpdateView):
     initial = {}
 
     template_name = 'registration/update_profile.html'
-    success_url = reverse_lazy('mycrew')
+    success_url = reverse_lazy('fantapoma:mycrew')

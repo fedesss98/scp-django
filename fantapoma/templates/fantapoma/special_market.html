@@ -49,7 +49,7 @@
             <h5>{{object.name}}</h5>
           </div>
           <div class="card-body">
-            <p class="card-text">{{ object.special }}</p>
+            <p class="card-text">{{ object.special|safe }}</p>
             <h5 class="card-text text-end m-2">{{object.price}} Franchini</h5>
             {% if request.user in object.players.all %}
               <button class="btn btn-primary" disabled>Acquista</button>
