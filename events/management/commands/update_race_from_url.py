@@ -11,6 +11,9 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
+from urllib.parse import unquote
+
+
 BASE_URL = 'https://canottaggioservice.canottaggio.net/'
 
 RISULTATI_EXPRESSIONS = [
@@ -27,7 +30,7 @@ class Command(BaseCommand):
         parser.add_argument('url', type=str, help='The URL of the race to be created')
 
     def handle(self, *args, **options):
-        requested_url = options['url']
+        requested_url = unquote(options['url'])
         try:
             self.event = Event.objects.get(url=requested_url)
         except Event.DoesNotExist:
@@ -171,7 +174,7 @@ class Command(BaseCommand):
             return None
         else:
             crew_instance = crew_instance.first()
-        crew_instance.result = position.text.strip()
+        crew_instance.result = position.text.strip().split(' ')[0]
         crew_instance.save()
         self.stdout.write(self.style.SUCCESS(f'Successfully updated crew "{crew_instance}" with result {position.text.strip()}'))
         return None

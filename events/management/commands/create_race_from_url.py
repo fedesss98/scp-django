@@ -11,6 +11,9 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
+from urllib.parse import unquote
+
+
 BASE_URL = 'https://canottaggioservice.canottaggio.net/'
 
 PROGRAMMA_EXPRESSIONS = [
@@ -29,7 +32,7 @@ class Command(BaseCommand):
         parser.add_argument('url', type=str, help='The URL of the race to be created')
 
     def handle(self, *args, **options):
-        requested_url = options['url']
+        requested_url = unquote(options['url'])
         try:
             self.event = Event.objects.get(url=requested_url)
         except Event.DoesNotExist:

@@ -9,6 +9,8 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
+from urllib.parse import unquote
+
 
 class Command(BaseCommand):
     help = 'Create an Event instance from data obtained via a GET request to a specified URL'
@@ -17,7 +19,8 @@ class Command(BaseCommand):
         parser.add_argument('url', type=str, help='The URL of the event to be created')
 
     def handle(self, *args, **options):
-        requested_url = options['url']
+        requested_url = unquote(options['url'])
+        print(requested_url)
         found = False
         base_events_url = 'https://canottaggioservice.canottaggio.net/'
         soup = self.request_page()
@@ -41,13 +44,12 @@ class Command(BaseCommand):
                 event.save()
                 self.stdout.write(self.style.SUCCESS(f'Successfully created event "{event}" from data obtained via GET request to {url}'))
         if not found:
-            self.stdout.write(self.style.WARNING(f'Requested URL not found'))
+            self.stdout.write(self.style.WARNING('Requested URL not found'))
 
     @staticmethod
     def format_date(date_string):
         date_object = datetime.strptime(date_string, '%d/%m/%Y')
-        formatted_date_string = date_object.strftime('%Y-%m-%d')
-        return formatted_date_string
+        return date_object.strftime('%Y-%m-%d')
 
     @staticmethod
     def request_page():
