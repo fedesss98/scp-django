@@ -192,8 +192,116 @@ class FantaAthleteEventScore(models.Model):
     out_of_buoys = models.BooleanField(default=False, verbose_name='Tagliare il traguardo fuori dalle boe')
     bad_name_pronunciation = models.BooleanField(default=False, verbose_name='Nome pronunciato male dal giudice di partenza')
     last_to_go = models.BooleanField(default=False, verbose_name='Ultimo a gareggiare')
+    has_hat = models.BooleanField(default=False, verbose_name='Indossare un cappellino')
+    has_sunglasses = models.BooleanField(default=False, verbose_name='Indossare occhiali da sole')
+    has_red_tshirt = models.BooleanField(default=False, verbose_name='Indossare una maglietta rossa')
+    has_supporter = models.BooleanField(default=False, verbose_name='Portare un #scpsupporter')
 
     class Meta:
         unique_together = ('athlete', 'event')
 
-    
+    @property
+    def action_points(self):
+        ACTION_POINTS_MAP = {
+            'ficarra_video': 10,
+            'offered_food': 5,
+            'photo_jumping': 5,
+            'selfie_coach': 5,
+            'drink_to_coach': 5,
+            'selfie_franchina': 5,
+            'highfive_ficarra': 3,
+            'vittoria_video': 3,
+            'shaking_hands': 3,
+            'selfie_miele': 1,
+            'anger_beni': -10,
+            'stop_before_end': -5,
+            'coming_late': -5,
+            'fall_in_water': -5,
+            'fight_adversary': -5,
+            'not_throwing_garbage': -2,
+            'out_of_buoys': -2,
+            'bad_name_pronunciation': -2,
+            'last_to_go': -1,
+        }
+
+        return sum(
+            ACTION_POINTS_MAP[action]
+            for action in ACTION_POINTS_MAP
+            if getattr(self, action)
+        )
+
+
+class PlayerEventScore(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
+
+    def calculate_score(self):
+        KALOS_ATHLETES = [
+            'Coppola Gabriele',
+            'Castiglione Andrea',
+            'Marino Alberto',
+            'Romano Gabriele',
+            'Palumbo Lorenzo',
+        ]
+        KIDS_ATHLETES = [
+            'Oliva Salvatore',
+            'Panzica Lorenzo',
+            'Coppola Eleonora',
+            'Mascari Giuseppe',
+            'Sciabarrà Flavio',
+            'Li Greci Riccardo',
+            'Martucci Francesco Jan',
+        ]
+
+        fanta_athletes = self.player.athletes.all()
+        crew_has_hat = False
+        crew_has_red_shirt = False
+        crew_has_sunglasses = False
+        crew_has_supporter = False
+        kalos_club = 0
+        kids_club = 0
+        for fanta_athlete in fanta_athletes:
+            if fanta_athlete in KALOS_ATHLETES:
+                kalos_club += 1
+            if fanta_athlete in KIDS_ATHLETES:
+                kids_club += 1
+            try:
+                fanta_athlete_event_score = FantaAthleteEventScore.objects.get(athlete=fanta_athlete, event=self.event)
+            except FantaAthleteEventScore.DoesNotExist:
+                continue
+            else:
+                if fanta_athlete == self.player.cox:
+                    self.score += fanta_athlete_event_score.action_points * 2
+                else:
+                    self.score += fanta_athlete_event_score.action_points
+                if fanta_athlete_event_score.has_hat:
+                    crew_has_hat = True
+                if fanta_athlete_event_score.has_red_tshirt:
+                    crew_has_red_shirt = True
+                if fanta_athlete_event_score.has_sunglasses:
+                    crew_has_sunglasses = True
+                if fanta_athlete_event_score.has_supporter:
+                    crew_has_supporter = True
+
+            OBJECTS_SCORE_MAP = {
+                'Cappellino FantaPoma': (crew_has_hat, 20, -20),
+                'Maglietta Rossa': (crew_has_red_shirt, 10, -10),
+                'Occhiali da Sole': (crew_has_sunglasses, 10, -10),
+                'Supporter': (crew_has_supporter, 15, 0),
+            }
+
+            COACHES_SCORE_MAP = {
+                'Calogero Galletto': kalos_club*20,
+                'Naselli Marta': kids_club*20,
+            }
+
+            for special, (condition, positive_points, negative_points) in OBJECTS_SCORE_MAP.items():
+                if Special.objects.filter(name=special, players=self.player.user).exists():
+                    self.score += positive_points if condition else negative_points
+
+            for coach, points in COACHES_SCORE_MAP.items():
+                if Special.objects.filter(name=coach, players=self.player.user).exists():
+                    self.score += points
+
+        self.save()
