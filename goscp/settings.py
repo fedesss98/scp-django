@@ -14,6 +14,8 @@ from pathlib import Path
 from django.contrib.messages import constants as messages
 import os
 
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -89,14 +91,7 @@ DJANGO_ENV = os.environ.getenv('DJANGO_ENV', 'development')
 if DJANGO_ENV == 'production':
     # Production database settings (PostgreSQL)
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'your_database_name',
-            'USER': 'your_database_user',
-            'PASSWORD': 'your_database_password',
-            'HOST': 'your_database_host',
-            'PORT': 'your_database_port',
-        }
+        'default': dj_database_url.parse(os.getenv('DATABASE_PRIVATE_URL'))
     }
 else:
     # Development database settings (SQLite)
@@ -106,13 +101,6 @@ else:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 # Password validation
@@ -192,9 +180,9 @@ to True. Using a secure-only CSRF cookie makes it more difficult for network tra
 # SECURE_SSL_REDIRECT=True
 
 # Update database configuration from $DATABASE_URL.
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+# import dj_database_url
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
