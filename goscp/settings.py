@@ -83,6 +83,30 @@ WSGI_APPLICATION = 'goscp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# Get the environment variable 'DJANGO_ENV'
+DJANGO_ENV = os.environ.getenv('DJANGO_ENV', 'development') 
+
+if DJANGO_ENV == 'production':
+    # Production database settings (PostgreSQL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'your_database_name',
+            'USER': 'your_database_user',
+            'PASSWORD': 'your_database_password',
+            'HOST': 'your_database_host',
+            'PORT': 'your_database_port',
+        }
+    }
+else:
+    # Development database settings (SQLite)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
