@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'goscp.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # Get the environment variable 'DJANGO_ENV'
-DJANGO_ENV = os.environ.getenv('DJANGO_ENV', 'development') 
+DJANGO_ENV = os.environ.get('DJANGO_ENV', 'development') 
 
 if DJANGO_ENV == 'production':
     # Production database settings (PostgreSQL)
