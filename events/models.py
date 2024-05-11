@@ -95,6 +95,8 @@ class Race(models.Model):
         ('FINAL', 'Finale'),
     ]
     type = models.CharField(max_length=10, choices=TYPE_CHOICES, default='FINAL')
+    # Number of enrolled crews
+    enrolled = models.IntegerField(default=0)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
 
     def __str__(self):

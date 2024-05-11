@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from django.db.models import Sum
+from django.db.models import Sum, Q
 
 import math
 import datetime
@@ -229,6 +229,27 @@ class FantaAthleteEventScore(models.Model):
             for action in ACTION_POINTS_MAP
             if getattr(self, action)
         )
+    
+    @property
+    def race_points(self):
+        RACE_POINTS_MAP = {
+            '1': 50,
+            '2': 30,
+            '3': 20,
+            'last': -10,
+        }
+        race_points = 0
+
+        crews = Crew.objects.filter(Q(athletes=self.athlete) & Q(race__event=self.event))
+        for crew in crews:
+            position = str(crew.position)
+            if position == crew.race.enrolled:
+                position = 'last'
+            if position in RACE_POINTS_MAP:
+                race_points += RACE_POINTS_MAP[position]
+        
+        return race_points
+
 
 
 class PlayerEventScore(models.Model):
