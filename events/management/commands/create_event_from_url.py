@@ -35,14 +35,17 @@ class Command(BaseCommand):
                 name = info[3].string.strip().title()
                 self.stdout.write(f'{"-" * 10}\nURL: {url}\nDate: {date}\nLocation: {location}\nName: {name}')
                 # Create the Event object
-                event = Event(
+                event, created = Event.objects.get_or_create(
                     url=url,
                     date=date,
                     location=location,
                     name=name
                 )
                 event.save()
-                self.stdout.write(self.style.SUCCESS(f'Successfully created event "{event}" from data obtained via GET request to {url}'))
+                if not created:
+                    print("Event already created. Skipping...")
+                else:
+                    self.stdout.write(self.style.SUCCESS(f'Successfully created event "{event}" from data obtained via GET request to {url}'))
         if not found:
             self.stdout.write(self.style.WARNING('Requested URL not found'))
 

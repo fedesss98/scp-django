@@ -39,11 +39,11 @@ class Command(BaseCommand):
         soup = self.request_page(requested_url)
         table = self.find_race_table(soup)
         if table is None:
-            raise Exception("No table found")
+            raise ValueError("No table found")
         else:
             program_link = self.search_race_program(table)
         if program_link is None:
-            raise Exception("No program link found")
+            raise ValueError("No program link found")
         print(BASE_URL + program_link)
         soup = self.request_page(BASE_URL + program_link)
         self.scrape_race_results(soup)

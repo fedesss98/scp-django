@@ -41,11 +41,11 @@ class Command(BaseCommand):
         soup = self.request_page(requested_url)
         table = self.find_race_table(soup)
         if table is None:
-            raise Exception("No table found")
+            raise ValueError("No table found")
         else:
             program_links = self.search_race_program(table)
         if program_links is None:
-            raise Exception("No program link found")
+            raise ValueError("No program link found")
         for program_link in program_links:
             soup = self.request_page(BASE_URL + program_link)
             self.scrape_race_plan(soup)
@@ -113,7 +113,7 @@ class Command(BaseCommand):
         category = ' '.join(words[i:])
         return boat, category, sex
 
-    def format_race_info(self, info):
+    def format_race_info(self, info, n_crews):
         race_number = info[2].strip()
         race_time = info[7].strip().replace('\xa0', '')
         race_boat, category, sex = self.take_boat_info(info[8].split('\xa0')[0].strip())
@@ -123,13 +123,16 @@ class Command(BaseCommand):
                 'category': category,
                 'gender': sex,
                 'type': info[8].split('\xa0')[-1].strip(),
-                'event': self.event,}
+                'event': self.event,
+                'enrolled': n_crews,}
 
     def create_race(self, table):
+        # Number of crews in race
+        n_crews = len(table.find_all('td'))
         # Take the header of the race (in parent table)
         race_info_table = table.parent.previous_sibling.previous_sibling.find('td', class_='t3')
-        race_infos = list(race_info_table.strings)
-        return Race.objects.create(**self.format_race_info(race_infos))
+        race_infos = self.format_race_info(list(race_info_table.strings), n_crews)
+        return Race.objects.create(**race_infos)
 
     @staticmethod
     def normalize_athletes_names(athlete):
