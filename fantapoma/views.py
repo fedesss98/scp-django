@@ -16,7 +16,7 @@ from .forms import UpdatePointsForm, SpecialForm, FantaAthleteEventScoreForm
 from django.contrib import messages
 
 
-MAX_ATHLETES = 9
+MAX_ATHLETES = 9 # Maximum number of athletes to buy
 
 
 def index(request):
@@ -296,12 +296,21 @@ class SellSpecialView(LoginRequiredMixin, View):
         else:
             messages.error(request, f'Non hai nessun {special.name} da vendere!') 
         return redirect('fantapoma:special-market')
-    
 
-class FantaAthleteEventScoreCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+
+class FantaAthleteEventScoreUpdateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = FantaAthleteEventScore
     form_class = FantaAthleteEventScoreForm
     template_name = 'fantapoma/set_score.html'
 
     def test_func(self):
         return self.request.user.is_staff
+    
+    def get_object(self, queryset=None):
+        fanta_athlete = get_object_or_404(FantaAthlete, id=self.kwargs['fanta_athlete_id'])
+        event = get_object_or_404(Event, name=self.kwargs['event_name'])
+        fanta_athlete_event_score, created = FantaAthleteEventScore.objects.get_or_create(athlete=fanta_athlete, event=event)
+        return fanta_athlete_event_score
+
+    def get_success_url(self):
+        return reverse('some_view')

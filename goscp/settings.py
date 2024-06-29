@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = os.environ.get('DJANGO_DEBUG', 'FALSE') != 'FALSE'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'TRUE') != 'FALSE'
 
 ALLOWED_HOSTS = ['web-production-100c.up.railway.app', 'web-production-acb4f.up.railway.app', 'goscp.it', 'www.fantapoma.it','127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://web-production-100c.up.railway.app', 'https://web-production-acb4f.up.railway.app', 'https://goscp.it', 'http://www.fantapoma.it',]
