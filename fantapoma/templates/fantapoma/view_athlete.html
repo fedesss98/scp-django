@@ -40,6 +40,7 @@
     {% else %}
     <input name='rimuovi' value="Rimuovi" type="Submit" class="btn btn-outline-danger disabled mt-4" />
     {% endif %}
+    <a href="{% url 'fantapoma:fanta_athlete_event_score_update' athlete.id %}" class="btn btn-seconday">Testimonia</a>
   </form>
   {% endif %}
 </div>
